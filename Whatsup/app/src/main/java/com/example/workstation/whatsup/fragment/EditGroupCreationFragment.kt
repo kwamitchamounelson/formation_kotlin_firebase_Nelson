@@ -10,14 +10,11 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-
 import com.example.workstation.whatsup.R
 import com.example.workstation.whatsup.glide.GlideApp
-import com.example.workstation.whatsup.util.FirestoreUtil
-import com.example.workstation.whatsup.util.StorageUtil
 import kotlinx.android.synthetic.main.fragment_edit_group_creation.*
+import kotlinx.android.synthetic.main.fragment_edit_group_creation.view.*
 import java.io.ByteArrayOutputStream
 
 class EditGroupCreationFragment : Fragment() {
@@ -34,14 +31,14 @@ class EditGroupCreationFragment : Fragment() {
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_edit_group_creation, container, false)
         view.apply {
-            groupe_image.setOnClickListener{
-                val intent= Intent().apply {
-                    type="image/*"
-                    action= Intent.ACTION_GET_CONTENT
-                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg","image/png"))
-                }
-                startActivityForResult(Intent.createChooser(intent,"Choisir une image"),RC_SELECT_IMAGE)
-            }
+//            groupe_image_edit.setOnClickListener{
+//                val intent= Intent().apply {
+//                    type="image/*"
+//                    action= Intent.ACTION_GET_CONTENT
+//                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg","image/png"))
+//                }
+//                startActivityForResult(Intent.createChooser(intent,"Choisir une image"),RC_SELECT_IMAGE)
+//            }
         }
         return view
     }
@@ -60,7 +57,7 @@ class EditGroupCreationFragment : Fragment() {
                 .transform(CircleCrop())
                 .placeholder(R.drawable.ic_group_work_black_24dp)
                 .error(R.drawable.ic_group_work_black_24dp)
-                .into(groupe_image)
+                .into(groupe_image_edit)
 
             pictureJustChanged=true
         }
@@ -73,7 +70,7 @@ class EditGroupCreationFragment : Fragment() {
             .transform(CircleCrop())
             .placeholder(R.drawable.ic_group_work_black_24dp)
             .error(R.drawable.ic_group_work_black_24dp)
-            .into(groupe_image)
+            .into(groupe_image_edit)
     }
 
 
