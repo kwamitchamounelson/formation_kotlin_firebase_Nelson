@@ -7,4 +7,5 @@ object AppConstants {
     const val ENGLISH="ENGLISH"
     const val FRENSH="FRENSH"
     const val NO_LANGUAGE="NO_LANGUAGE"
+    const val NO_LANGUAGE_CODE=-1000
 }

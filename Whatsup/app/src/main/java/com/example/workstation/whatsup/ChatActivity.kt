@@ -6,6 +6,8 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.menu.MenuView
+import android.support.v7.view.menu.MenuView.ItemView
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -118,6 +120,16 @@ class ChatActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.english -> {
                 messagesListenerRegistration=FirestoreUtil.addChatMessageListener(AppConstants.ENGLISH,currentChannelId,
+                    this,this::updateRecycleView)
+                return true
+            }
+            R.id.frensh -> {
+                messagesListenerRegistration=FirestoreUtil.addChatMessageListener(AppConstants.FRENSH,currentChannelId,
+                    this,this::updateRecycleView)
+                return true
+            }
+            R.id.no_traduction -> {
+                messagesListenerRegistration=FirestoreUtil.addChatMessageListener(AppConstants.NO_LANGUAGE,currentChannelId,
                     this,this::updateRecycleView)
                 return true
             }

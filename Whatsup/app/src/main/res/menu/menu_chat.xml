@@ -4,8 +4,15 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.workstation.whatsup.ChatActivity">
     <item android:id="@+id/english"
-          android:title="Anglais"
+          android:title="Traduire en Anglais"
           android:orderInCategory="100"
           app:showAsAction="never"/>
-
+    <item android:id="@+id/frensh"
+          android:title="Traduire en Français"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+    <item android:id="@+id/no_traduction"
+          android:title="Annuler la Traduction"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>
