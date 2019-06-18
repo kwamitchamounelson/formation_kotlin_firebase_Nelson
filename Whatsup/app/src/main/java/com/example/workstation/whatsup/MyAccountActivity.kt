@@ -3,11 +3,10 @@ package com.example.workstation.whatsup
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.workstation.whatsup.glide.GlideApp
 import com.example.workstation.whatsup.util.FirestoreUtil

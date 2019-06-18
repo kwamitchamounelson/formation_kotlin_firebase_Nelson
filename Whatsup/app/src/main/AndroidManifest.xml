@@ -16,19 +16,20 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".CreatChatGroupActivity"
+                android:name=".CreatChatGroup2Activity"
                 android:noHistory="true"
-                >
+                android:label="@string/title_activity_creat_chat_group2">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity"/>
         </activity>
         <activity
                 android:name=".MyAccountActivity"
-                android:noHistory="false"
-                >
+                android:noHistory="false">
         </activity>
         <activity
                 android:name=".UserAuthActivity"
-                android:noHistory="true"
-                >
+                android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -56,10 +57,9 @@
                 android:name=".service.MyFirebaseInstanceServiceId"
                 android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

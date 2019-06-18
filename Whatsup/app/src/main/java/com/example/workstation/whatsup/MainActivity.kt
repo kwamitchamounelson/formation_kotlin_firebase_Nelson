@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_group -> {
-                val intent = Intent(this, CreatChatGroupActivity::class.java)
+                val intent = Intent(this, CreatChatGroup2Activity::class.java)
                 startActivity(intent)
                 return true
             }
