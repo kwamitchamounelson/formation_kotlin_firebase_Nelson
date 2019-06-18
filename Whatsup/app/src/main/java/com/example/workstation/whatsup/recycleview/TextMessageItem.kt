@@ -19,14 +19,17 @@ class TextMessageItem(val language:String,
                       val message:TextMessage,
                       val context: Context)
     :MessageItem(message){
+    private val colorTranslateText=Color.GRAY
+    private val colorSrcText=Color.BLACK
     override fun bind(viewHolder: ViewHolder, position: Int) {
+        var origineLanguageCode="X"
         FirebaseMLKUtil.translateMsg(language,message.tex, onComplete = { stransletedMessage: String ->
             viewHolder.textView_message_text.text=stransletedMessage
             if(stransletedMessage.equals(message.tex,true)){
-                viewHolder.textView_message_text.setTextColor(Color.BLACK)
+                viewHolder.textView_message_text.setTextColor(colorSrcText)
             }
             else{
-                viewHolder.textView_message_text.setTextColor(Color.GRAY)
+                viewHolder.textView_message_text.setTextColor(colorTranslateText)
             }
             // recuperation de la langue du texte
             val languageIdentifier = FirebaseNaturalLanguage
@@ -34,6 +37,7 @@ class TextMessageItem(val language:String,
                 .languageIdentification
             languageIdentifier.identifyLanguage(stransletedMessage)
                 .addOnSuccessListener { languageCode ->
+                    origineLanguageCode=showLanguageCode(languageCode)
                     if(!languageCode.equals("und",true)){
                         var code=languageCode
                         if(languageCode.equals("en",true)){
@@ -88,18 +92,35 @@ class TextMessageItem(val language:String,
                             .addOnSuccessListener { translatedText ->
                                 viewHolder.textView_message_text.text=translatedText
                                 viewHolder.button_translate_item.text=newCode
+                                viewHolder.textView_message_text.setTextColor(colorTranslateText)
                             }
                             .addOnFailureListener { exception ->
                                 viewHolder.textView_message_text.text=msg
+                                viewHolder.textView_message_text.setTextColor(colorSrcText)
 
                             }
                     }
                     .addOnFailureListener { exception ->
                         viewHolder.textView_message_text.text=msg
+                        viewHolder.textView_message_text.setTextColor(colorSrcText)
                     }
             }
         }
+        viewHolder.button_no_translate_item.setOnClickListener {
+            viewHolder.textView_message_text.text=message.tex
+            viewHolder.textView_message_text.setTextColor(colorSrcText)
+            viewHolder.button_translate_item.text=origineLanguageCode
+        }
         super.bind(viewHolder, position)
+    }
+
+    private fun showLanguageCode(languageCode: String): String {
+        return when(languageCode){
+            "und"->"X"
+            "en"->"fr"
+            "fr"->"en"
+            else->languageCode
+        }
     }
 
     private fun translateTexte(textToTranslate: String,language:String): String {

@@ -30,7 +30,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.concurrent.TimeUnit
 import com.example.workstation.whatsup.recycleview.PersonItem
+import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions
 import com.xwray.groupie.OnItemClickListener
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.toast
 
 
@@ -47,10 +51,28 @@ class MainActivity : AppCompatActivity() {
 
         userListenerRegistration=FirestoreUtil.addUserListener(this, this::updateRecycleView)
 
+        downloadEhglishFrenchLanguage()
+
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Kwami Tchamou Nelson", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+    }
+
+    private fun downloadEhglishFrenchLanguage() {
+        val options = FirebaseTranslatorOptions.Builder()
+            .setSourceLanguage(FirebaseTranslateLanguage.FR)
+            .setTargetLanguage(FirebaseTranslateLanguage.EN)
+            .build()
+        val progressdialog = indeterminateProgressDialog("Mise à jour de la traduction...")
+        val translator = FirebaseNaturalLanguage.getInstance().getTranslator(options)
+        translator.downloadModelIfNeeded()
+            .addOnSuccessListener {
+                progressdialog.dismiss()
+            }
+            .addOnFailureListener { exception ->
+                progressdialog.dismiss()
+            }
     }
 
 

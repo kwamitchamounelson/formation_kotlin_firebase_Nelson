@@ -24,7 +24,7 @@
                 android:paddingEnd="8dp"
                 android:paddingTop="4dp"
                 android:textAppearance="@style/Base.CardView"
-                android:textSize="15dp"
+                android:textSize="16dp"
                 tools:text="bonjour bonjour bonjour bonjour"/>
         <TextView
                 android:id="@+id/textView_message_time"
@@ -34,18 +34,33 @@
                 android:layout_alignEnd="@+id/textView_message_text"
                 android:layout_marginEnd="8dp"
                 android:text="3/15/2019 3:00 PM"
-                android:textSize="12sp"/>
-        <Button
-                android:id="@+id/button_translate_item"
-                android:background="@drawable/ronded_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginBottom="5dp"
+                android:textSize="8sp"/>
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:layout_below="@+id/textView_message_time"
                 android:layout_alignEnd="@+id/textView_message_time"
-                android:textAllCaps="false"
-                android:text="fr"
-        />
+                android:orientation="horizontal">
+            <Button
+                    android:id="@+id/button_no_translate_item"
+                    android:background="@drawable/ronded_button_reset"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:textAllCaps="false"
+                    android:textSize="11dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Original"/>
+            <Button
+                    android:id="@+id/button_translate_item"
+                    android:background="@drawable/ronded_button"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:textAllCaps="false"
+                    android:text="fr"/>
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 </FrameLayout>
