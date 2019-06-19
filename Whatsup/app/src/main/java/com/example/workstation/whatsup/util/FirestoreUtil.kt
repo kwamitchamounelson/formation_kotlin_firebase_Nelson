@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.example.workstation.whatsup.entities.*
 import com.example.workstation.whatsup.recycleview.ImageMessageItem
 import com.example.workstation.whatsup.recycleview.PersonItem
+import com.example.workstation.whatsup.recycleview.PersonItemGroup
 import com.example.workstation.whatsup.recycleview.TextMessageItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -65,6 +66,25 @@ object FirestoreUtil {
                     querySnapshot.documents.forEach {
                         if(it.id!=FirebaseAuth.getInstance().currentUser?.phoneNumber){
                             items.add(PersonItem(it.toObject(User::class.java)!!,it.id,context))
+                        }
+                    }
+                }
+                onListen(items)
+            }
+    }
+
+    fun addUserListenerGroup(context: Context, onListen:(List<Item>)->Unit):ListenerRegistration{
+        return firestoreInstance.collection("users")
+            .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
+                if(firebaseFirestoreException!=null){
+                    Log.e("FIRESTORE","User listener error.",firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+                val items= mutableListOf<Item>()
+                if (querySnapshot != null) {
+                    querySnapshot.documents.forEach {
+                        if(it.id!=FirebaseAuth.getInstance().currentUser?.phoneNumber){
+                            items.add(PersonItemGroup(it.toObject(User::class.java)!!,it.id,context,false))
                         }
                     }
                 }

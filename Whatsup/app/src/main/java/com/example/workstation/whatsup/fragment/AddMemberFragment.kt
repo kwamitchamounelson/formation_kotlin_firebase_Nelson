@@ -16,6 +16,7 @@ import com.example.workstation.whatsup.AppConstants
 
 import com.example.workstation.whatsup.R
 import com.example.workstation.whatsup.recycleview.PersonItem
+import com.example.workstation.whatsup.recycleview.PersonItemGroup
 import com.example.workstation.whatsup.util.FirestoreUtil
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.GroupAdapter
@@ -45,7 +46,7 @@ class AddMemberFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userListenerRegistration= FirestoreUtil.addUserListener(this.activity!!, this::updateRecycleView)
+        userListenerRegistration= FirestoreUtil.addUserListenerGroup(this.activity!!, this::updateRecycleView)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_member, container, false)
     }
@@ -76,8 +77,8 @@ class AddMemberFragment : Fragment() {
     }
 
     private val onItemClick= OnItemClickListener{ item, view ->
-        if(item is PersonItem){
-            Toast.makeText(this@AddMemberFragment.context,item.person.phoneNumber,Toast.LENGTH_SHORT).show()
+        if(item is PersonItemGroup){
+            //Toast.makeText(this@AddMemberFragment.context,item.person.phoneNumber,Toast.LENGTH_SHORT).show()
         }
 
     }
