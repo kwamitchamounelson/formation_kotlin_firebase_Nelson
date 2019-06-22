@@ -8,10 +8,11 @@ import com.example.workstation.whatsup.util.StorageUtil
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_image_message.*
 
-class ImageMessageItem(val message:ImageMessage,val context: Context):MessageItem(message) {
+class ImageMessageItem(val message:ImageMessage,val context: Context,val senderId:String):MessageItem(message) {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         super.bind(viewHolder, position)
+        viewHolder.sender_name_image.text=senderId
         GlideApp.with(context)
             .load(StorageUtil.pathToReference(message.imagePath))
             .placeholder(R.drawable.ic_image_black_24dp)

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "420587544700",
+    "firebase_url": "https://moneypal-88e28.firebaseio.com",
+    "project_id": "moneypal-88e28",
+    "storage_bucket": "moneypal-88e28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420587544700:android:f2d767c14f103029",
+        "android_client_info": {
+          "package_name": "com.example.workstation.moneypal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420587544700-pfqsuaqrkdojo0h1aukrgm2jov4gevo4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workstation.moneypal",
+            "certificate_hash": "4b4a8dbb77a9d59038878667948e8b2302f8e8f7"
+          }
+        },
+        {
+          "client_id": "420587544700-d01g3ssvcn29s4ab5l6hvi2mb2dorltf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9kephBzEFk6mjBMIL6gkYtt-QZBjbyN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420587544700-d01g3ssvcn29s4ab5l6hvi2mb2dorltf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

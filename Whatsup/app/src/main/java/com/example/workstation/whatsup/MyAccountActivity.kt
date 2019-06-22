@@ -82,6 +82,14 @@ class MyAccountActivity : AppCompatActivity() {
                     .error(R.drawable.ic_account_circle_black_24dp)
                     .into(photo_user_account)
             }
+            else{
+                GlideApp.with(this)
+                    .load("")
+                    .transform(CircleCrop())
+                    .placeholder(R.drawable.ic_account_circle_black_24dp)
+                    .error(R.drawable.ic_account_circle_black_24dp)
+                    .into(photo_user_account)
+            }
         }
     }
 }

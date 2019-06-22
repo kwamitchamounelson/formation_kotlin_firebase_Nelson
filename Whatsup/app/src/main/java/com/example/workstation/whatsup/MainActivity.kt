@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.workstation.whatsup.entities.User
+import com.example.workstation.whatsup.recycleview.GroupItem
 import com.example.workstation.whatsup.util.FirestoreUtil
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -185,6 +186,12 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(AppConstants.USER_NAME,item.person.name)
             intent.putExtra(AppConstants.USER_PHONE,item.person.phoneNumber)
             intent.putExtra(AppConstants.USER_ID,item.userId)
+            startActivity(intent)
+        }
+        else if(item is GroupItem){
+            val intent = Intent(this, ChatGroupActivity::class.java)
+            intent.putExtra(AppConstants.GROUP_NAME,item.group.name)
+            intent.putExtra(AppConstants.GROUP_ID,item.group.grpoupId)
             startActivity(intent)
         }
 

@@ -12,6 +12,13 @@ import com.example.workstation.whatsup.entities.GroupeCreateParameter
 import com.example.workstation.whatsup.fragment.AddMemberFragment
 import com.example.workstation.whatsup.fragment.EditGroupCreationFragment
 import com.example.workstation.whatsup.util.FirestoreUtil
+import com.example.workstation.whatsup.util.StorageUtil
+import com.google.firebase.auth.FirebaseAuth
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.toast
+import java.security.SecureRandom
+import java.time.LocalDateTime
+import java.util.*
 
 class CreatChatGroup2Activity : AppCompatActivity() {
 
@@ -40,15 +47,37 @@ class CreatChatGroup2Activity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_group_buton -> {
                 if(!GroupeCreateParameter.listOfMenbersNumber.isEmpty()){
                     if(!GroupeCreateParameter.groupeName.isEmpty()){
+                        GroupeCreateParameter.listOfMenbersNumber.add(FirebaseAuth.getInstance().currentUser?.phoneNumber!!)
+
                         // creation du groupe
-                        GroupeCreateParameter.clearAllData()
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
+                        if(GroupeCreateParameter.selectedImageBytes!=null){
+                            val progressDialog=indeterminateProgressDialog("Création en cours...")
+                            FirestoreUtil.CreateGroupe(GroupeCreateParameter,"",onComplete = {
+                                StorageUtil.uploadprofilePhotoGroup(GroupeCreateParameter.selectedImageBytes!!,it){ imagePath->
+                                    FirestoreUtil.updateImagePathGroup(it,imagePath,onComplete = {message->
+                                        progressDialog.dismiss()
+                                        toast(message)
+                                        exitActivity()
+                                    })
+                                }
+                            })
+
+                        }
+                        else{
+                            val progressDialog=indeterminateProgressDialog("Création en cours...")
+                            FirestoreUtil.CreateGroupe(GroupeCreateParameter,null,onComplete = {
+                                progressDialog.dismiss()
+                                exitActivity()
+                            })
+                        }
+                        // fin de la creation de groupe
+
                     }
                     else{
                         Toast.makeText(this,"Veillez donner un Nom au Groupe", Toast.LENGTH_LONG).show()
@@ -61,6 +90,17 @@ class CreatChatGroup2Activity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun exitActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        GroupeCreateParameter.clearAllData()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

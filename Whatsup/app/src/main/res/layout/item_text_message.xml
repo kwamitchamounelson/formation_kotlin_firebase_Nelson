@@ -15,6 +15,20 @@
             android:layout_gravity="end"
             android:background="@drawable/rest_round_primary_color">
         <TextView
+                android:id="@+id/sender_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="250dp"
+                android:minWidth="120dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:textColor="#FF5722"
+                android:textAppearance="@style/Base.CardView"
+                android:textSize="11dp"
+                android:textStyle="italic"
+                tools:text=""/>
+        <TextView
                 android:id="@+id/textView_message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -25,6 +39,7 @@
                 android:paddingTop="4dp"
                 android:textAppearance="@style/Base.CardView"
                 android:textSize="16dp"
+                android:layout_below="@+id/sender_name"
                 tools:text="bonjour bonjour bonjour bonjour"/>
         <TextView
                 android:id="@+id/textView_message_time"

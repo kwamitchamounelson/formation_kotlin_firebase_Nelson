@@ -47,6 +47,14 @@ class PersonItemGroup (val person: User,
                 .error(R.drawable.ic_account_circle_black_24dp)
                 .into(viewHolder.photo_user_group)
         }
+        else{
+            GlideApp.with(context)
+                .load("")
+                .transform(CircleCrop())
+                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                .error(R.drawable.ic_account_circle_black_24dp)
+                .into(viewHolder.photo_user_group)
+        }
     }
 
     override fun getLayout()= R.layout.row_user_group

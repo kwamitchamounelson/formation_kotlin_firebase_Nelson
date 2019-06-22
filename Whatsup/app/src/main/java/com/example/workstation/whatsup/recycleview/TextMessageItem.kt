@@ -17,11 +17,13 @@ import kotlinx.android.synthetic.main.item_text_message.*
 
 class TextMessageItem(val language:String,
                       val message:TextMessage,
-                      val context: Context)
+                      val context: Context,
+                      val senderId:String)
     :MessageItem(message){
     private val colorTranslateText=Color.GRAY
     private val colorSrcText=Color.BLACK
     override fun bind(viewHolder: ViewHolder, position: Int) {
+        viewHolder.sender_name.text=senderId
         var origineLanguageCode="X"
         FirebaseMLKUtil.translateMsg(language,message.tex, onComplete = { stransletedMessage: String ->
             viewHolder.textView_message_text.text=stransletedMessage
@@ -123,73 +125,6 @@ class TextMessageItem(val language:String,
         }
     }
 
-    private fun translateTexte(textToTranslate: String,language:String): String {
-
-        var text=textToTranslate
-        // recuperation de la langue du texte
-        val languageIdentifier = FirebaseNaturalLanguage
-            .getInstance()
-            .languageIdentification
-        var srcLanguage=AppConstants.NO_LANGUAGE_CODE
-        languageIdentifier.identifyLanguage(textToTranslate)
-            .addOnSuccessListener { languageCode ->
-                if (languageCode !== "und" &&languageCode.equals("fr")) {
-                    // Toast.makeText(context,"$textToTranslate($languageCode)",Toast.LENGTH_SHORT).show()
-                    srcLanguage= FirebaseTranslateLanguage.languageForLanguageCode(languageCode)!!
-                    text=when(language){
-                        AppConstants.NO_LANGUAGE->textToTranslate
-                        AppConstants.ENGLISH->{
-                            // code de traduction
-                            translateMyTextToLanguage(textToTranslate,srcLanguage,FirebaseTranslateLanguage.EN)
-                        }
-                        else->textToTranslate
-                    }
-                }
-            }
-            .addOnFailureListener(
-                object:OnFailureListener {
-                    override fun onFailure(e:Exception) {
-                        Toast.makeText(context,"erreur de détection de langue",Toast.LENGTH_SHORT).show()
-                    }
-                })
-        return text
-    }
-
-    private fun translateMyTextToLanguage(textToTranslate: String,
-                                          srcLanguageCode: Int,
-                                          destLanguaCode: Int): String {
-        var finalText=textToTranslate
-        var dowlodSucces=false
-        if(srcLanguageCode==17){
-            // definition de loption de traduction
-            val options = FirebaseTranslatorOptions.Builder()
-                .setSourceLanguage(srcLanguageCode)
-                .setTargetLanguage(destLanguaCode)
-                .build()
-
-            // telechargement de la traduction
-            val translator = FirebaseNaturalLanguage.getInstance().getTranslator(options)
-            translator.downloadModelIfNeeded()
-                .addOnSuccessListener {
-                    dowlodSucces=true
-                }
-                .addOnFailureListener { exception ->
-                    dowlodSucces=false
-                }
-
-            // lancement de la traduction
-            translator.translate(textToTranslate)
-                .addOnSuccessListener { translatedText ->
-                    finalText= translatedText
-                }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(context,"erreur de traduction",Toast.LENGTH_SHORT).show()
-                    finalText= textToTranslate
-                }
-            Toast.makeText(context,finalText,Toast.LENGTH_SHORT).show()
-        }
-        return finalText
-    }
 
     override fun getLayout()= R.layout.item_text_message
 

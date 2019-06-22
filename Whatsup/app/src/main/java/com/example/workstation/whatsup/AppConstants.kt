@@ -8,4 +8,7 @@ object AppConstants {
     const val FRENSH="FRENSH"
     const val NO_LANGUAGE="NO_LANGUAGE"
     const val NO_LANGUAGE_CODE=-1000
+
+    const val GROUP_ID="USER_NAME"
+    const val GROUP_NAME="GROUP_NAME"
 }

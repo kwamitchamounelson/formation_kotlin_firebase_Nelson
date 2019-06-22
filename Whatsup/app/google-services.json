@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "90098910326-0oe6ka5jr9c9jjple7t5jnk7hrnjgel4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workstation.whatsup",
+            "certificate_hash": "e9aad08d0b7996204a55bba8547eef15008d1f8d"
+          }
+        },
+        {
           "client_id": "90098910326-vfkk9g186e81d1373pr8egrjvi4q0tfh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
