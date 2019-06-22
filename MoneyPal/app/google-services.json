@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "420587544700-67pr2p3t28mh5h0h9s84g029qlu5usgg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workstation.moneypal",
+            "certificate_hash": "e9aad08d0b7996204a55bba8547eef15008d1f8d"
+          }
+        },
+        {
           "client_id": "420587544700-pfqsuaqrkdojo0h1aukrgm2jov4gevo4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
