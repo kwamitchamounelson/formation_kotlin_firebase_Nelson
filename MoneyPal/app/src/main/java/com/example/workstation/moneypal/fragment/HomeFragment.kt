@@ -10,11 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.workstation.moneypal.R
 import com.example.workstation.moneypal.entities.DetailOperation
 import com.example.workstation.moneypal.entities.Operation
+import com.example.workstation.moneypal.glide.GlideApp
 import com.example.workstation.moneypal.recycleView.DetailOperationItem
 import com.example.workstation.moneypal.recycleView.OperationItem
 import com.xwray.groupie.GroupAdapter
@@ -38,12 +38,12 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_home, container, false)
         view.apply {
-            Glide.with(this)
+            GlideApp.with(this@HomeFragment)
                 .load("")
                 .transform(CircleCrop())
                 .placeholder(R.drawable.ic_person_outline_black_24dp)
                 .error(R.drawable.ic_person_outline_black_24dp)
-                .into(image_view_user)
+                .into(view.image_view_user)
 
             view.recyclerView_operation.apply {
                 layoutManager= LinearLayoutManager(this@HomeFragment.context,LinearLayout.HORIZONTAL,false)

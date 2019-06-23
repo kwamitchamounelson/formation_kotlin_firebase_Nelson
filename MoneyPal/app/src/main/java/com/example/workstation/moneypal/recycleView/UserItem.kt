@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.row_users.*
 class UserItem (val user:User, private val context: Context):
 Item() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.user_name.text=user.userName
+        viewHolder.user_name.text=user.name
         viewHolder.day.text="Lundi 5"
         viewHolder.amount_text_user.text="0000"
     }

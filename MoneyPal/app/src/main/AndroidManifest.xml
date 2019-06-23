@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.workstation.moneypal">
 
+    <uses-permission android:name="android.permission.INTERNET"/> <!-- External storage permission -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- Wallpaper permission -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+
     <application
             android:allowBackup="true"
             android:icon="@drawable/moneypal"
@@ -10,18 +14,29 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".MoneyPalActivity"
-                android:theme="@style/AppNoTToolBar"
+                android:name=".MyAccountActivity"
+                android:noHistory="false">
+        </activity>
+        <activity
+                android:name=".UserAuthActivity"
+                android:noHistory="true"
                 android:screenOrientation="portrait"
-                android:label="@string/app_name">
+                android:theme="@style/AppNoTToolBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity
+                android:name=".MoneyPalActivity"
+                android:label="@string/app_name"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppNoTToolBar">
         </activity>
+        <meta-data
+                android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+                android:value="label"/>
     </application>
 
 </manifest>
