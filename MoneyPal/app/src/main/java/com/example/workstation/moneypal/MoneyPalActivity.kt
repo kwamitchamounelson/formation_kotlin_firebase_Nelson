@@ -65,6 +65,9 @@ class MoneyPalActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.current_operator -> {
+                return true
+            }
             R.id.new_group -> {
                 return true
             }

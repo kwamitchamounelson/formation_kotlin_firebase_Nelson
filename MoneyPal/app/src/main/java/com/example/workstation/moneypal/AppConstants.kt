@@ -24,6 +24,8 @@ object AppConstants {
     const val DEPOTS="Dépot"
 
     //mobile money account
+    //const val MTN_MOBILE_MONEY_OPERATOR="MobileMoney"
+    //const val ORANGE_MONEY_OPERATOR="OrangeMoney"
     const val MTN_MOBILE_MONEY_OPERATOR="+237691621708"
-    const val ORANGE_MONEY_OPERATOR="OrangeMoney"
+    const val ORANGE_MONEY_OPERATOR="+237691621708"
 }

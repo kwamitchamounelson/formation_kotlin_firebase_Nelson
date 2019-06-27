@@ -32,6 +32,8 @@ import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.support.v4.indeterminateProgressDialog
 import org.jetbrains.anko.support.v4.toast
 
 
@@ -156,6 +158,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadData(operation: Operation?) {
+        val progressDialog=indeterminateProgressDialog("Récupération des messages...")
         currentOperation=operation
         detailsOperationsItems.clear()
         currentListOfDetailOperation.clear()
@@ -184,6 +187,7 @@ class HomeFragment : Fragment() {
             }
         }
         updateRecycleViewDetailOperation()
+        progressDialog.dismiss()
     }
 
     private val onItemClickOperation= OnItemClickListener{ item, view ->

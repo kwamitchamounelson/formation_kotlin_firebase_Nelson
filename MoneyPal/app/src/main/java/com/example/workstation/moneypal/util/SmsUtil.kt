@@ -351,14 +351,14 @@ object SmsUtil {
 
                         when(OperatorParameter.CURRENT_OPERATOR){
                             AppConstants.ORANGE_MONEY_OPERATOR->{
-                                val splitor1="fcfa"
+                                val splitor1="netdebite"
                                 val tab=messageBody.split(splitor1)
                                 if(tab.isNotEmpty()){
-                                    val splitor2="montant:"
-                                    val tab2=(tab[0]).split(splitor2)
+                                    val splitor2="fcfa"
+                                    val tab2=(tab[1]).split(splitor2)
                                     if(tab2.isNotEmpty()){
                                         solde=try {
-                                            tab2[1].toInt()
+                                            tab2[0].toInt()
                                         }catch (e:Exception){
                                             0
                                         }
