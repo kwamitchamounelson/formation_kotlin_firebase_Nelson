@@ -1,5 +1,12 @@
 package com.example.workstation.moneypal.entities
 
-data class DetailOperation(val operationName:String,val day:String,val amount:Int) {
-    constructor():this("","",0)
+import java.io.Serializable
+import java.util.*
+
+data class DetailOperation(
+    val operation: Operation?,
+    val date:Date?,
+    var amount:Int,
+    val smsObject: SmsObject?) :Serializable {
+    constructor() : this(null,null,0,null)
 }

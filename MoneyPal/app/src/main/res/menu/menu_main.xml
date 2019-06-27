@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.example.workstation.moneypal.MoneyPalActivity">
+    <item android:id="@+id/new_group"
+          android:title="Créer un groupe"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/orange_money"
+          android:title="Passer à OrangeMoney"
+          android:icon="@drawable/orang"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/mobile_money"
+          android:title="Passer à Mobile Money"
+          android:icon="@drawable/mtn"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item
+            android:id="@+id/current_operator"
+            android:orderInCategory="300"
+            android:title="User"
+            android:icon="@drawable/mtn"
+            app:showAsAction="ifRoom">
+    </item>
+</menu>

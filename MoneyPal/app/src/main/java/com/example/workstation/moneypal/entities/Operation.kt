@@ -1,5 +1,7 @@
 package com.example.workstation.moneypal.entities
 
-data class Operation(val name:String) {
+import java.io.Serializable
+
+data class Operation(val name:String): Serializable {
     constructor():this("")
 }

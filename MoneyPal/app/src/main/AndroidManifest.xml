@@ -4,7 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET"/> <!-- External storage permission -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- Wallpaper permission -->
-    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/> <!-- To use SMS based services -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
             android:allowBackup="true"
@@ -13,6 +16,13 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".YourPaymentResultActivity">
+        </activity>
+        <activity android:name=".DetailOperationActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MoneyPalActivity"/>
+        </activity>
         <activity
                 android:name=".MyAccountActivity"
                 android:noHistory="false">
@@ -31,9 +41,9 @@
         <activity
                 android:name=".MoneyPalActivity"
                 android:label="@string/app_name"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppNoTToolBar">
+                android:screenOrientation="portrait">
         </activity>
+
         <meta-data
                 android:name="com.google.firebase.ml.vision.DEPENDENCIES"
                 android:value="label"/>
