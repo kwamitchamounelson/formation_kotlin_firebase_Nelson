@@ -16,10 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.workstation.moneypal.AppConstants
 import com.example.workstation.moneypal.DetailOperationActivity
 import com.example.workstation.moneypal.R
-import com.example.workstation.moneypal.entities.DetailOperation
-import com.example.workstation.moneypal.entities.Operation
-import com.example.workstation.moneypal.entities.OperationData
-import com.example.workstation.moneypal.entities.SmsObject
+import com.example.workstation.moneypal.entities.*
 import com.example.workstation.moneypal.glide.GlideApp
 import com.example.workstation.moneypal.recycleView.DetailOperationItem
 import com.example.workstation.moneypal.recycleView.OperationItem
@@ -204,5 +201,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        AcountParameter.infoDayAcount= myView.info_date.text.toString()
+        AcountParameter.infoSoldeAcount= myView.info_solde.text.toString()
+    }
 }

@@ -3,7 +3,10 @@ package com.example.workstation.whatsup.util
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.example.workstation.moneypal.entities.GroupParameter
+import com.example.workstation.moneypal.entities.GroupUsers
 import com.example.workstation.moneypal.entities.User
+import com.example.workstation.moneypal.recycleView.GroupUserItem
 import com.example.workstation.moneypal.recycleView.UserItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
@@ -49,27 +52,6 @@ object FirestoreUtil {
         currentUserDocRef.update(userFieldMap)
     }
 
-    /*fun CreateGroupe(groupParameter:GroupeCreateParameter,photo:String?=null,onComplete: (groupId:String) -> Unit){
-        val newGroup=GroupUser("",groupParameter.groupeName,photo,groupParameter.listOfMenbersNumber)
-        val refGroupe = currentGroupColRef.document()
-        refGroupe.set(newGroup)
-            .addOnSuccessListener {
-                // ajout de lid du groupe dans la liste des utilisateurs
-                var ref:Any
-                for(userPhone in groupParameter.listOfMenbersNumber){
-                    ref= firestoreInstance.document("users/$userPhone").collection("groups").document(refGroupe.id).set(mapOf("groupId" to refGroupe.id))
-                }
-
-                val refGroup= firestoreInstance.collection("groups").document(refGroupe.id)
-                refGroup.update("grpoupId",refGroupe.id)
-                    .addOnSuccessListener {
-                        onComplete(refGroupe.id)
-                    }
-                    .addOnFailureListener{
-                        onComplete(refGroupe.id)
-                    }
-            }
-    }*/
 
     fun getCurrentUser(onComplete: (User) -> Unit){
         currentUserDocRef.get().addOnSuccessListener {
@@ -85,10 +67,16 @@ object FirestoreUtil {
                 }
                 val items= mutableListOf<Item>()
                 val userPhone=FirebaseAuth.getInstance().currentUser?.phoneNumber
+                var user:User
+                var currentGroup:GroupUsers?=null
                 if (querySnapshot != null) {
                     querySnapshot.documents.forEach {
-                        if(it.id!=FirebaseAuth.getInstance().currentUser?.phoneNumber){
-                            items.add(UserItem(it.toObject(User::class.java)!!,context))
+                        if(it.id!=userPhone){
+                            user=it.toObject(User::class.java)!!
+                            currentGroup=GroupParameter.currenGroupUsers
+                            if(currentGroup!=null && currentGroup!!.listOfUsers.contains(user.phoneNumber)){
+                                items.add(UserItem(user,context))
+                            }
                         }
                     }
                 }
@@ -96,23 +84,53 @@ object FirestoreUtil {
             }
     }
 
-    /*fun addUserListenerGroup(context: Context, onListen:(List<Item>)->Unit):ListenerRegistration{
-        return firestoreInstance.collection("users")
+    fun addGroupListener2(context: Context, onListen:(List<Item>)->Unit):ListenerRegistration{
+        return firestoreInstance.collection("groups")
             .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
                 if(firebaseFirestoreException!=null){
-                    Log.e("FIRESTORE","User listener error.",firebaseFirestoreException)
                     return@addSnapshotListener
                 }
                 val items= mutableListOf<Item>()
+                val userPhone=FirebaseAuth.getInstance().currentUser?.phoneNumber
+                var currentgroup:GroupUsers
                 if (querySnapshot != null) {
                     querySnapshot.documents.forEach {
-                        if(it.id!=FirebaseAuth.getInstance().currentUser?.phoneNumber){
-                            items.add(PersonItemGroup(it.toObject(User::class.java)!!,it.id,context,false))
+                        currentgroup=it.toObject(GroupUsers::class.java)!!
+                        if(currentgroup.listOfUsers.contains(userPhone)){
+                            items.add(GroupUserItem(currentgroup ,context))
                         }
                     }
                 }
                 onListen(items)
             }
+    }
+
+    /*fun addGroupListener(context: Context, onListen:(List<Item>)->Unit): ListenerRegistration? {
+        val userPhone=FirebaseAuth.getInstance().currentUser?.phoneNumber
+        if(userPhone!=null){
+            val refGroup=firestoreInstance.collection("groups")
+            return firestoreInstance.collection("users").document(userPhone).collection("groups")
+                .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
+                    if(firebaseFirestoreException!=null){
+                        return@addSnapshotListener
+                    }
+                    val items= mutableListOf<Item>()
+                    if(querySnapshot!=null){
+                        querySnapshot.documents.forEach {groupDoc->
+                            val group=refGroup.document(groupDoc.id)
+                                .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    if(documentSnapshot!=null){
+                                        items.add(GroupUserItem(documentSnapshot.toObject(GroupUsers::class.java)!!,context))
+                                    }
+                                }
+                        }
+                    }
+                    onListen(items)
+                }
+        }
+        else{
+            return null
+        }
     }*/
 
     fun addSearchUserListener(context: Context, text:String, onListen:(List<Item>)->Unit):ListenerRegistration{
@@ -142,93 +160,31 @@ object FirestoreUtil {
             }
     }
 
+
+    fun CreateGroupe(group:GroupUsers,photo:String?=null,onComplete: (groupId:String) -> Unit){
+        val refGroupe = currentGroupColRef.document()
+        refGroupe.set(group)
+            .addOnSuccessListener {
+                val refGroup= firestoreInstance.collection("groups").document(refGroupe.id)
+                refGroup.update("groupId",refGroupe.id)
+                    .addOnSuccessListener {
+                        onComplete(refGroupe.id)
+                    }
+                    .addOnFailureListener{
+                        onComplete(refGroupe.id)
+                    }
+            }
+    }
+
     fun removeListener(registration: ListenerRegistration)=registration.remove()
 
-    /*fun getOrCreatChatChannel(otherUserId:String,onComplete: (channelId:String) -> Unit){
-        currentUserDocRef.collection("engagedChatChannels")
-            .document(otherUserId).get().addOnSuccessListener {
-                if(it.exists()){
-                    onComplete(it["channelId"] as String)
-                    return@addOnSuccessListener
-                }
-                val currentUserId=FirebaseAuth.getInstance().currentUser!!.phoneNumber
-                val newChannel= chatChannelsCollectionRef.document()
-                newChannel.set(ChatChannel(mutableListOf(currentUserId,otherUserId)))
-                currentUserDocRef
-                    .collection("engagedChatChannels")
-                    .document(otherUserId)
-                    .set(mapOf("channelId" to newChannel.id))
 
-                firestoreInstance.collection("users").document(otherUserId)
-                    .collection("engagedChatChannels")
-                    .document(currentUserId!!)
-                    .set(mapOf("channelId" to newChannel.id))
-                onComplete(newChannel.id)
-            }
-    }*/
-
-    /*fun addChatMessageListener(language:String,channelId:String,context: Context,onListen:(List<Item>)->Unit):ListenerRegistration{
-        return chatChannelsCollectionRef.document(channelId).collection("messages")
-            .orderBy("time")
-            .addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
-                if(firebaseFirestoreException!=null){
-                    Log.e("FIRESTORE","ChatMessageListener error.",firebaseFirestoreException)
-                    return@addSnapshotListener
-                }
-                val items= mutableListOf<Item>()
-                if (querySnapshot != null) {
-                    querySnapshot.documents.forEach {
-                        if(it["type"]==MessageType.TEXT){
-                            items.add(TextMessageItem(language,it.toObject(TextMessage::class.java)!!,context,""))
-                        } else{
-                            items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!,context,""))
-                        }
-                        return@forEach
-                    }
-                }
-                onListen(items)
-            }
-    }*/
-
-
-    /*// liste des messages de group
-    fun addChatGroupMessageListener(language:String,groupId:String,context: Context,onListen:(List<Item>)->Unit):ListenerRegistration{
-        return chatGroupCollectionRef.document(groupId).collection("messages")
-            .orderBy("time")
-            .addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
-                if(firebaseFirestoreException!=null){
-                    return@addSnapshotListener
-                }
-                val items= mutableListOf<Item>()
-                if (querySnapshot != null) {
-                    querySnapshot.documents.forEach {
-                        if(it["type"]==MessageType.TEXT){
-                            val messageText=it.toObject(TextMessage::class.java)
-                            items.add(TextMessageItem(language,messageText!!,context,messageText.senderId))
-                        } else{
-                            val messageImage=it.toObject(ImageMessage::class.java)
-                            items.add(ImageMessageItem(messageImage!!,context,messageImage.senderId))
-                        }
-                        return@forEach
-                    }
-                }
-                onListen(items)
-            }
-    }*/
-
-    /*fun sendMessage(message:Message,channelId:String){
-        chatChannelsCollectionRef.document(channelId).collection("messages").add(message)
-    }*/
-
-    /*fun sendMessageGroup(message:Message,groupId:String){
-        chatGroupCollectionRef.document(groupId).collection("messages").add(message)
-    }*/
 
     fun updateImagePathGroup(groupId: String, imagePath: String,onComplete: (message:String) -> Unit) {
         val ref= firestoreInstance.collection("groups").document(groupId)
         ref.update("photo",imagePath)
             .addOnSuccessListener {
-                ref.update("grpoupId",groupId)
+                ref.update("groupId",groupId)
                     .addOnSuccessListener {
                         onComplete("Groupe crée")
                     }

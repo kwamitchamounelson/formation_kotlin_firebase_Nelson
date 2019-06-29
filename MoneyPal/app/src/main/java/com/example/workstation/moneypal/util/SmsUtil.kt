@@ -159,7 +159,7 @@ object SmsUtil {
 
     //FONCION RETOURNANT LE SOLDE D'UN UTILISATEUR A PARTIR DE SA DERNIERE OPERATION
     fun getTheSolde(detailOperation: DetailOperation?):Int{
-        var solde=0
+        var solde:Double= 0.0
         val operation=detailOperation!!.operation
         val smsObjet=detailOperation!!.smsObject
         val messageBody=smsObjet!!.messageBody.replace("\\s".toRegex(), "").toLowerCase(Locale.ROOT)
@@ -202,9 +202,9 @@ object SmsUtil {
                             val tab2=(tab[1]).split(splitor2)
                             if(tab2.isNotEmpty()){
                                 solde=try {
-                                    tab2[0].toInt()
+                                    tab2[0].toDouble()
                                 }catch (e:Exception){
-                                    0
+                                    0.0
                                 }
                             }
                         }
@@ -223,9 +223,9 @@ object SmsUtil {
                             val tab2=(tab[1]).split(splitor2)
                             if(tab2.isNotEmpty()){
                                 solde=try {
-                                    tab2[0].toInt()
+                                    tab2[0].toDouble()
                                 }catch (e:Exception){
-                                    0
+                                    0.0
                                 }
                             }
                         }
@@ -245,9 +245,9 @@ object SmsUtil {
                             val tab2=(tab[1]).split(splitor2)
                             if(tab2.isNotEmpty()){
                                 solde=try {
-                                    tab2[0].toInt()
+                                    tab2[0].toDouble()
                                 }catch (e:Exception){
-                                    0
+                                    0.0
                                 }
                             }
                         }
@@ -260,9 +260,9 @@ object SmsUtil {
                             val tab2=(tab[1]).split(splitor2)
                             if(tab2.isNotEmpty()){
                                 solde=try {
-                                    tab2[0].toInt()
+                                    tab2[0].toDouble()
                                 }catch (e:Exception){
-                                    0
+                                    0.0
                                 }
                             }
                         }
@@ -270,16 +270,16 @@ object SmsUtil {
                 }
             }
             else->{
-                solde=0
+                solde=0.0
             }
         }
-        return solde
+        return solde.toInt()
     }
 
 
     //FONCION RETOURNANT LE MONTANT DUNE OPERATION
     fun getAmounOfDetailOperation(detailOperation: DetailOperation?):DetailOperation{
-        var solde=0
+        var solde:Double= 0.0
         val operation=detailOperation!!.operation
         if(detailOperation!=null){
             val smsObjet=detailOperation!!.smsObject
@@ -324,9 +324,9 @@ object SmsUtil {
                                     var tab2=(tab[0]).split(splitor2)
                                     if(tab2.isNotEmpty()){
                                         solde=try {
-                                            tab2[1].toInt()
+                                            tab2[1].toDouble()
                                         }catch (e:Exception){
-                                            0
+                                            0.0
                                         }
                                         splitor1="frais:"
                                         tab=messageBody.split(splitor1)
@@ -335,9 +335,9 @@ object SmsUtil {
                                             tab2=(tab[1]).split(splitor2)
                                             if(tab2.isNotEmpty()){
                                                 solde+=try {
-                                                    tab2[0].toInt()
+                                                    tab2[0].toDouble()
                                                 }catch (e:Exception){
-                                                    0
+                                                    0.0
                                                 }
                                             }
                                         }
@@ -358,9 +358,9 @@ object SmsUtil {
                                     val tab2=(tab[1]).split(splitor2)
                                     if(tab2.isNotEmpty()){
                                         solde=try {
-                                            tab2[0].toInt()
+                                            tab2[0].toDouble()
                                         }catch (e:Exception){
-                                            0
+                                            0.0
                                         }
                                     }
                                 }
@@ -381,9 +381,9 @@ object SmsUtil {
                                     val tab2=(tab[0]).split(splitor2)
                                     if(tab2.isNotEmpty()){
                                         solde=try {
-                                            tab2[1].toInt()
+                                            tab2[1].toDouble()
                                         }catch (e:Exception){
-                                            0
+                                            0.0
                                         }
                                     }
                                 }
@@ -396,9 +396,9 @@ object SmsUtil {
                                     val tab2=(tab[0]).split(splitor2)
                                     if(tab2.isNotEmpty()){
                                         solde=try {
-                                            tab2[1].toInt()
+                                            tab2[1].toDouble()
                                         }catch (e:Exception){
-                                            0
+                                            0.0
                                         }
                                     }
                                 }
@@ -407,12 +407,12 @@ object SmsUtil {
 
                     }
                     else->{
-                        solde=0
+                        solde=0.0
                     }
                 }
             }
         }
-        detailOperation.amount=solde
+        detailOperation.amount= solde.toInt()
         return detailOperation
     }
 

@@ -1,5 +1,6 @@
 package com.example.workstation.moneypal
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.OperatorParameter
 import com.example.workstation.moneypal.fragment.GroupFragment
 import com.example.workstation.moneypal.fragment.HomeFragment
@@ -38,7 +40,7 @@ class MoneyPalActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_money_pal)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        changeOperator(OperatorParameter.CURRENT_OPERATOR,HomeFragment())
+        changeOperator(OperatorParameter.CURRENT_OPERATOR)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
@@ -66,24 +68,35 @@ class MoneyPalActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.current_operator -> {
+                GroupParameter.currentFragment=1
+                if(OperatorParameter.CURRENT_OPERATOR.equals(AppConstants.ORANGE_MONEY_OPERATOR,true)){
+                    changeOperator(AppConstants.MTN_MOBILE_MONEY_OPERATOR)
+                }
+                else{
+                    changeOperator(AppConstants.ORANGE_MONEY_OPERATOR)
+                }
                 return true
             }
-            R.id.new_group -> {
+            R.id.group_manager -> {
+                val intent = Intent(this, GroupActivity::class.java)
+                startActivity(intent)
                 return true
             }
             R.id.orange_money -> {
-                changeOperator(AppConstants.ORANGE_MONEY_OPERATOR,HomeFragment())
+                GroupParameter.currentFragment=1
+                changeOperator(AppConstants.ORANGE_MONEY_OPERATOR)
                 return true
             }
             R.id.mobile_money -> {
-                changeOperator(AppConstants.MTN_MOBILE_MONEY_OPERATOR,HomeFragment())
+                GroupParameter.currentFragment=1
+                changeOperator(AppConstants.MTN_MOBILE_MONEY_OPERATOR)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    fun changeOperator(operatorName:String,fragment: Fragment){
+    fun changeOperator(operatorName:String){
         OperatorParameter.CURRENT_OPERATOR=operatorName
         if(operatorIndicator!=null){
             when(OperatorParameter.CURRENT_OPERATOR){
@@ -95,6 +108,11 @@ class MoneyPalActivity : AppCompatActivity() {
                 }
             }
         }
-        replaceFragment(fragment)
+        if(GroupParameter.currentFragment==2){
+            replaceFragment(GroupFragment())
+        }
+        else{
+            replaceFragment(HomeFragment())
+        }
     }
 }

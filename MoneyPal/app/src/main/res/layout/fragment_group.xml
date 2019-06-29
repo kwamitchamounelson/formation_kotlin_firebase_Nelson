@@ -23,7 +23,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
             <TextView
-                    android:id="@+id/info_date"
+                    android:id="@+id/group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
@@ -35,20 +35,22 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/progressBar3"/>
+                    android:id="@+id/progressbar_amount"/>
             <TextView
+                    android:id="@+id/amount_group"
                     android:layout_gravity="right"
                     android:textColor="#FFFF"
                     android:text="5000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <TextView
+                    android:id="@+id/info_date_group"
                     android:textColor="#FFFF"
                     android:text="Solde du compte a la Date du 14 May"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             <TextView
-                    android:id="@+id/info_solde"
+                    android:id="@+id/info_solde_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -81,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:id="@+id/textView"/>
+                    android:id="@+id/add_member_text_view"/>
             <TextView
                     android:textAlignment="textEnd"
                     android:text="PAY MEMBER"
@@ -91,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:id="@+id/textView2"/>
+                    android:id="@+id/pay_member_text_view"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
