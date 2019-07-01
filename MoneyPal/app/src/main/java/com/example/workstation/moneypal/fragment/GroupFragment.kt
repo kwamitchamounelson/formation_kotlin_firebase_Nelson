@@ -30,6 +30,7 @@ class GroupFragment : Fragment() {
 
     private lateinit var userListenerRegistration: ListenerRegistration
     private var shouldInitRecycleview=true
+    private lateinit var myView:View
     //var users= mutableListOf<Item>()
     private lateinit var peopleSection: Section
     override fun onCreateView(
@@ -39,28 +40,29 @@ class GroupFragment : Fragment() {
 
         loadData()
         // Inflate the layout for this fragment
-        val view= inflater.inflate(R.layout.fragment_group, container, false)
+        myView= inflater.inflate(R.layout.fragment_group, container, false)
         view.apply {
-            view.info_date_group.text=AcountParameter.infoDayAcount
-            view.info_solde_group.text=AcountParameter.infoSoldeAcount
+            myView.info_date_group.text=AcountParameter.infoDayAcount
+            myView.info_solde_group.text=AcountParameter.infoSoldeAcount
             val currentGroup=GroupParameter.currenGroupUsers
             if(currentGroup!=null){
-                view.group_name.text=currentGroup.groupName
-                view.amount_group.text=currentGroup.abjectifAmount.toString()
+                myView.group_name.text=currentGroup.groupName
+                myView.amount_group.text=currentGroup.abjectifAmount.toString()
                 //gestion du progress bar
-                view.progressbar_amount.apply {
+                myView.progressbar_amount.apply {
                     max=currentGroup.abjectifAmount
                     progress=GroupParameter.currenGroupTotalAmount
                 }
 
             }
             else{
-                view.group_name.text=""
-                view.amount_group.text=""
+                myView.group_name.text=""
+                myView.amount_group.text=""
             }
-            view.add_member_text_view.setOnClickListener {
+            myView.add_member_text_view.setOnClickListener {
                 if(currentGroup!=null){
                     //gestion de dynamique link
+
                 }
                 else{
                     toast("Veuillez choisir un groupe")
@@ -69,7 +71,7 @@ class GroupFragment : Fragment() {
                 }
             }
         }
-        return view
+        return myView
     }
 
     private fun loadData() {
@@ -78,7 +80,7 @@ class GroupFragment : Fragment() {
 
     private fun updateRecycleView(items: List<Item>){
         fun init(){
-            recyclerView_users.apply {
+            myView.recyclerView_users.apply {
                 layoutManager=LinearLayoutManager(this@GroupFragment.context)
                 adapter= GroupAdapter<ViewHolder>().apply {
                     peopleSection=Section(items)
@@ -98,7 +100,7 @@ class GroupFragment : Fragment() {
             updateItem()
         }
         val itemDecor = DividerItemDecoration(this@GroupFragment.context, ClipDrawable.HORIZONTAL)
-        recyclerView_users.addItemDecoration(itemDecor)
+        myView.recyclerView_users.addItemDecoration(itemDecor)
     }
 
     private val onItemClick= OnItemClickListener{ item, view ->

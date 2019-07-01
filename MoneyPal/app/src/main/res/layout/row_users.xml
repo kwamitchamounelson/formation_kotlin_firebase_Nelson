@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/linearLayout_row_user"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:background="#FFFF"
@@ -36,10 +37,25 @@
                 android:layout_height="wrap_content"
                 android:text="Samedi 9"/>
     </LinearLayout>
-    <TextView
-            android:id="@+id/amount_text_user"
-            android:text="1 600"
-            android:textSize="15dp"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/amount_text_user"
+                android:text="1 600"
+                android:textSize="15dp"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"/>
+        <ImageButton
+                android:src="@drawable/ic_edit_black_24dp"
+                android:id="@+id/button_edit_amount_row"
+                android:background="@drawable/ronded_button"
+                android:layout_width="30dp"
+                android:visibility="gone"
+                android:layout_height="30dp"
+                android:textAllCaps="false">
+        </ImageButton>
+    </LinearLayout>
 </LinearLayout>

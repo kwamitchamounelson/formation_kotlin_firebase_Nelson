@@ -1,8 +1,10 @@
 package com.example.workstation.whatsup.util
 
 import android.content.Context
+import android.icu.util.CurrencyAmount
 import android.util.Log
 import android.widget.Toast
+import com.example.workstation.moneypal.entities.ContributionUser
 import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.GroupUsers
 import com.example.workstation.moneypal.entities.User
@@ -23,10 +25,6 @@ object FirestoreUtil {
             ?:throw NullPointerException("UID is null")}")
 
     private val currentGroupColRef:CollectionReference = firestoreInstance.collection("groups")
-
-    private val chatChannelsCollectionRef= firestoreInstance.collection("chatChannels")
-
-    private val chatGroupCollectionRef= firestoreInstance.collection("groups")
 
     fun initCurrentUserIfFirstTime(onComplete: ()->Unit){
         currentUserDocRef.get().addOnSuccessListener { documentSnapshot ->
@@ -67,20 +65,35 @@ object FirestoreUtil {
                 }
                 val items= mutableListOf<Item>()
                 val userPhone=FirebaseAuth.getInstance().currentUser?.phoneNumber
+                var contributionUser:ContributionUser
+                var userRef:Any
                 var user:User
+                GroupParameter.currenGroupTotalAmount=0
                 var currentGroup:GroupUsers?=null
                 if (querySnapshot != null) {
                     querySnapshot.documents.forEach {
-                        if(it.id!=userPhone){
-                            user=it.toObject(User::class.java)!!
-                            currentGroup=GroupParameter.currenGroupUsers
-                            if(currentGroup!=null && currentGroup!!.listOfUsers.contains(user.phoneNumber)){
-                                items.add(UserItem(user,context))
-                            }
+                        user=it.toObject(User::class.java)!!
+                        currentGroup=GroupParameter.currenGroupUsers
+                        if(currentGroup!=null && currentGroup!!.listOfUsers.contains(user.phoneNumber)){
+                            userRef=firestoreInstance.collection("users").
+                                document(userPhone!!)
+                                .collection("groups")
+                                .document(currentGroup!!.groupId)
+                                .get()
+                                .addOnSuccessListener {
+                                    contributionUser= it!!.toObject(ContributionUser::class.java)!!
+                                    GroupParameter.currenGroupTotalAmount+=contributionUser.amount
+                                    Toast.makeText(context,"${contributionUser}",Toast.LENGTH_SHORT).show()
+                                    items.add(UserItem(user,contributionUser,context))
+                                    onListen(items)
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(context,"ecec de chargement",Toast.LENGTH_SHORT).show()
+                                }
                         }
                     }
+                    //onListen(items)
                 }
-                onListen(items)
             }
     }
 
@@ -105,35 +118,8 @@ object FirestoreUtil {
             }
     }
 
-    /*fun addGroupListener(context: Context, onListen:(List<Item>)->Unit): ListenerRegistration? {
-        val userPhone=FirebaseAuth.getInstance().currentUser?.phoneNumber
-        if(userPhone!=null){
-            val refGroup=firestoreInstance.collection("groups")
-            return firestoreInstance.collection("users").document(userPhone).collection("groups")
-                .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
-                    if(firebaseFirestoreException!=null){
-                        return@addSnapshotListener
-                    }
-                    val items= mutableListOf<Item>()
-                    if(querySnapshot!=null){
-                        querySnapshot.documents.forEach {groupDoc->
-                            val group=refGroup.document(groupDoc.id)
-                                .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                                    if(documentSnapshot!=null){
-                                        items.add(GroupUserItem(documentSnapshot.toObject(GroupUsers::class.java)!!,context))
-                                    }
-                                }
-                        }
-                    }
-                    onListen(items)
-                }
-        }
-        else{
-            return null
-        }
-    }*/
 
-    fun addSearchUserListener(context: Context, text:String, onListen:(List<Item>)->Unit):ListenerRegistration{
+    /*fun addSearchUserListener(context: Context, text:String, onListen:(List<Item>)->Unit):ListenerRegistration{
         return firestoreInstance.collection("users")
             .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
                 if(firebaseFirestoreException!=null){
@@ -158,7 +144,7 @@ object FirestoreUtil {
                 }
                 onListen(items)
             }
-    }
+    }*/
 
 
     fun CreateGroupe(group:GroupUsers,photo:String?=null,onComplete: (groupId:String) -> Unit){
@@ -168,11 +154,28 @@ object FirestoreUtil {
                 val refGroup= firestoreInstance.collection("groups").document(refGroupe.id)
                 refGroup.update("groupId",refGroupe.id)
                     .addOnSuccessListener {
-                        onComplete(refGroupe.id)
+                        addUpdateUserAmountGroup(currentUser!!.phoneNumber!!,0,refGroupe.id,onComplete = {
+                            onComplete(refGroupe.id)
+                        })
                     }
                     .addOnFailureListener{
-                        onComplete(refGroupe.id)
+                        addUpdateUserAmountGroup(currentUser!!.phoneNumber!!,0,refGroupe.id,onComplete = {
+                            onComplete(refGroupe.id)
+                        })
                     }
+            }
+    }
+
+
+    fun addUpdateUserAmountGroup(userPhone:String,amount: Int,groupId1:String,onComplete: (groupId2:String) -> Unit){
+        val contributionUser=ContributionUser(userPhone,groupId1,amount)
+        val refGroupe = currentUserDocRef.collection("groups")
+            .document(groupId1).set(contributionUser)
+            .addOnSuccessListener{
+                onComplete(groupId1)
+            }
+            .addOnFailureListener {
+                onComplete(groupId1)
             }
     }
 

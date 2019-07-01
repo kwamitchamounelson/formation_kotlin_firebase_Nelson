@@ -69,7 +69,7 @@
             <Button
                     android:id="@+id/button_translate_item"
                     android:background="@drawable/ronded_button"
-                    android:layout_width="25dp"
+                    android:layout_width="17dp"
                     android:layout_height="25dp"
                     android:textAllCaps="false"
                     android:text="fr"/>
