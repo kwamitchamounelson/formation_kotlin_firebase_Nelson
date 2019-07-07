@@ -23,7 +23,14 @@
             android:id="@+id/current_operator"
             android:orderInCategory="300"
             android:title="User"
-            android:icon="@drawable/mtn"
+            android:icon="@drawable/orang"
             app:showAsAction="ifRoom">
     </item>
+    <!--<item
+            android:id="@+id/open_groups"
+            android:orderInCategory="300"
+            android:title="Groupes"
+            android:icon="@drawable/group_illustration"
+            app:showAsAction="ifRoom">
+    </item>-->
 </menu>

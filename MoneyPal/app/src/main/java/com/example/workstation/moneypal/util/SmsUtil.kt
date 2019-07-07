@@ -18,6 +18,7 @@ object SmsUtil {
     @SuppressLint("NewApi")
     fun getAllSms(context: Context,operation: Operation?): ArrayList<SmsObject> {
         val lstSms = ArrayList<SmsObject>()
+        //TODO mettre la permision dans le code
         val c = context.contentResolver.query(
             Telephony.Sms.Inbox.CONTENT_URI,
             arrayOf(
@@ -157,7 +158,7 @@ object SmsUtil {
         return list
     }
 
-    //FONCION RETOURNANT LE SOLDE D'UN UTILISATEUR A PARTIR DE SA DERNIERE OPERATION
+    //TODO FONCION RETOURNANT LE SOLDE D'UN UTILISATEUR A PARTIR DE SA DERNIERE OPERATION
     fun getTheSolde(detailOperation: DetailOperation?):Int{
         var solde:Double= 0.0
         val operation=detailOperation!!.operation
@@ -277,7 +278,7 @@ object SmsUtil {
     }
 
 
-    //FONCION RETOURNANT LE MONTANT DUNE OPERATION
+    //TODO FONCION RETOURNANT LE MONTANT DUNE OPERATION a optimiser
     fun getAmounOfDetailOperation(detailOperation: DetailOperation?):DetailOperation{
         var solde:Double= 0.0
         val operation=detailOperation!!.operation

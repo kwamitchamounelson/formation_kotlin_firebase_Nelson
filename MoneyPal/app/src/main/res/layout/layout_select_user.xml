@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_select_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <Button
+                    android:text="Annuler"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_cancel_alert_dialog"
+                    android:background="@drawable/ronded_button_red"
+                    android:textColor="@android:color/white"/>
+            <Button
+                    android:text="Envoyer"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_send_link"
+                    android:background="@drawable/ronded_button"
+                    android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

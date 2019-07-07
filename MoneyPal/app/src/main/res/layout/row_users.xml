@@ -45,9 +45,10 @@
         <TextView
                 android:id="@+id/amount_text_user"
                 android:text="1 600"
+                android:textColor="@color/sucess"
                 android:textSize="15dp"
                 android:layout_width="70dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
         <ImageButton
                 android:src="@drawable/ic_edit_black_24dp"
                 android:id="@+id/button_edit_amount_row"

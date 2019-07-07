@@ -61,7 +61,7 @@
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="145dp"
-                android:background="@color/colorPrimary" android:textColor="@android:color/white"/>
+                android:background="@drawable/ronded_button" android:textColor="@android:color/white"/>
         <Button
                 android:text="Annuler"
                 android:layout_width="200dp"
@@ -69,7 +69,7 @@
                 android:id="@+id/button_cancel" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                 app:layout_constraintHorizontal_bias="0.501"
-                android:textColor="@android:color/white" android:background="@android:color/holo_red_dark"
+                android:textColor="@android:color/white" android:background="@drawable/ronded_button_red"
                 android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/button_creat_group"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

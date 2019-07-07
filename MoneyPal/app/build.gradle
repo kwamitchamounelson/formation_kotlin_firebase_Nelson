@@ -24,6 +24,11 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven { url 'http://maven.usehover.com/releases' }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -34,6 +39,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //useHover
+    implementation('com.hover:android-sdk:1.2.2') { transitive = true; }
 
 
     //firebase
@@ -49,7 +57,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-ml-natural-language:19.0.1'
     implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:19.0.1'
     implementation 'com.google.firebase:firebase-ml-natural-language-language-id-model:19.0.1'
-    implementation 'com.google.firebase:firebase-dynamic-links:18.0.0'
+    //implementation 'com.google.firebase:firebase-dynamic-links:18.0.0'
+    //implementation 'com.google.firebase:firebase-config:18.0.0'
 
 
     //monetbil

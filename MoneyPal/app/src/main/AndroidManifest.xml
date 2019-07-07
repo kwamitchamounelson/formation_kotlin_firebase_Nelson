@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.example.workstation.moneypal">
 
     <uses-permission android:name="android.permission.INTERNET"/> <!-- External storage permission -->
@@ -16,6 +17,9 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".UserPayActivity"
+                  android:parentActivityName=".MoneyPalActivity">
+        </activity>
         <activity android:name=".CreatGroupActivity">
         </activity>
         <activity
@@ -53,6 +57,8 @@
                 android:name=".MoneyPalActivity"
                 android:label="@string/app_name"
                 android:screenOrientation="portrait">
+
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -61,11 +67,15 @@
                         android:host="workstation.page.link"
                         android:scheme="https"/>
             </intent-filter>
+            -->
         </activity>
 
         <meta-data
                 android:name="com.google.firebase.ml.vision.DEPENDENCIES"
                 android:value="label"/>
+        <meta-data
+                android:name="com.hover.ApiKey"
+                android:value="4324307b60fe30cb5725cf331ec19ad0"/>
     </application>
 
 </manifest>

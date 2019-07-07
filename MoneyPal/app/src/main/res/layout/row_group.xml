@@ -36,10 +36,39 @@
                 android:layout_height="wrap_content"
                 android:text="Details"/>
     </LinearLayout>
-    <TextView
-            android:id="@+id/amount_group_row"
-            android:text="0000"
-            android:textSize="15dp"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"/>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/amount_group_row"
+                android:text="0000"
+                android:textColor="@color/sucess"
+                android:textSize="15dp"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+            <ImageButton
+                    android:src="@drawable/ic_group_add_black_24dp"
+                    android:id="@+id/button_add_menber"
+                    android:background="@drawable/ronded_button"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:textAllCaps="false">
+            </ImageButton>
+            <ImageButton
+                    android:src="@drawable/ic_more_horiz_black_24dp"
+                    android:id="@+id/button_see_detail"
+                    android:background="@drawable/ronded_button"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:textAllCaps="false">
+            </ImageButton>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

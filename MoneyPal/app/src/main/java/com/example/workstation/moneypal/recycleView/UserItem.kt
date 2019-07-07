@@ -1,15 +1,19 @@
 package com.example.workstation.moneypal.recycleView
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.View
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.workstation.moneypal.AppConstants
 import com.example.workstation.moneypal.R
+import com.example.workstation.moneypal.UserPayActivity
 import com.example.workstation.moneypal.entities.ContributionUser
+import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.OperatorParameter
 import com.example.workstation.moneypal.entities.User
 import com.example.workstation.moneypal.glide.GlideApp
+import com.example.workstation.whatsup.util.FirestoreUtil
 import com.example.workstation.whatsup.util.StorageUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.xwray.groupie.kotlinandroidextensions.Item
@@ -33,8 +37,26 @@ Item() {
                 visibility=View.VISIBLE
                 setOnClickListener {
                     //implementation de la participation du user(utilisation d'un alertDialog ou utilisation de monetbilUI)
-
+                    val currentGroup= GroupParameter.currenGroupUsers
+                    if(currentGroup!=null){
+                        if(!(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!.equals(currentGroup.creatorPhone,true))){
+                            val intent=Intent(context,UserPayActivity::class.java)
+                            intent.putExtra(AppConstants.USER,user)
+                            intent.putExtra(AppConstants.CONTRIBUTION,contributionUser)
+                            context.startActivity(intent)
+                        }
+                        else{
+                            val message="Le créateur du groupe ne peut contribuer lui meme " +
+                                    "car les contributions sont faites dans son compte"
+                            FirestoreUtil.showAlertDilogue("Attention",message,context)
+                        }
+                    }
                 }
+            }
+        }
+        else{
+            viewHolder.button_edit_amount_row.apply {
+                visibility=View.GONE
             }
         }
         viewHolder.amount_text_user.text=contributionUser.amount.toString()

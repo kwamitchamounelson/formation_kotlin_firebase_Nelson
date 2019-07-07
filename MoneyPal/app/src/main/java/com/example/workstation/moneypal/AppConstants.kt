@@ -1,6 +1,9 @@
 package com.example.workstation.moneypal
 
 object AppConstants {
+    const val ACTION_SEND_MONEY_ORANGE_ORANGE="7bc2510f"
+    const val USER="USER"
+    const val CONTRIBUTION="CONTRIBUTION"
     const val USER_NAME="USER_NAME"
     const val USER_PHONE="USER_PHONE"
     const val USER_ID="USER_ID"

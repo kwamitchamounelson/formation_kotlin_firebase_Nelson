@@ -53,30 +53,32 @@ class HomeFragment : Fragment() {
     ): View? {
         myView= inflater.inflate(R.layout.fragment_home, container, false)
         myView.apply {
-            GlideApp.with(this@HomeFragment)
+            /*GlideApp.with(this@HomeFragment)
                 .load("")
                 .transform(CircleCrop())
-                .placeholder(R.drawable.ic_person_outline_black_24dp)
-                .error(R.drawable.ic_person_outline_black_24dp)
-                .into(myView.image_view_user)
-            /*FirestoreUtil.getCurrentUser { user ->
-                if(user.photo!=null){
-                    GlideApp.with(this@HomeFragment)
-                        .load(StorageUtil.pathToReference(user.photo!!))
-                        .transform(CircleCrop())
-                        .placeholder(R.drawable.ic_person_outline_black_24dp)
-                        .error(R.drawable.ic_person_outline_black_24dp)
-                        .into(myView.image_view_user)
+                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                .error(R.drawable.ic_account_circle_black_24dp)
+                .into(myView.image_view_user)*/
+            try {
+                FirestoreUtil.getCurrentUser { user ->
+                    if(user.photo!=null){
+                        GlideApp.with(this@HomeFragment)
+                            .load(StorageUtil.pathToReference(user.photo!!))
+                            .transform(CircleCrop())
+                            .placeholder(R.drawable.ic_person_outline_black_24dp)
+                            .error(R.drawable.ic_person_outline_black_24dp)
+                            .into(myView.image_view_user)
+                    }
+                    else{
+                        GlideApp.with(this@HomeFragment)
+                            .load("")
+                            .transform(CircleCrop())
+                            .placeholder(R.drawable.ic_person_outline_black_24dp)
+                            .error(R.drawable.ic_person_outline_black_24dp)
+                            .into(myView.image_view_user)
+                    }
                 }
-                else{
-                    GlideApp.with(this@HomeFragment)
-                        .load("")
-                        .transform(CircleCrop())
-                        .placeholder(R.drawable.ic_person_outline_black_24dp)
-                        .error(R.drawable.ic_person_outline_black_24dp)
-                        .into(myView.image_view_user)
-                }
-            }*/
+            }catch (e:Exception){}
         }
         myView.button_see_all.setOnClickListener {
             initAllOperationTypes()

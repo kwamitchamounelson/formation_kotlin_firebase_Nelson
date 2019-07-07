@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.ClipDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.example.workstation.moneypal.GroupActivity
 import com.example.workstation.moneypal.R
 import com.example.workstation.moneypal.entities.AcountParameter
 import com.example.workstation.moneypal.entities.GroupParameter
+import com.example.workstation.moneypal.entities.GroupeCreateParameter
 import com.example.workstation.moneypal.recycleView.UserItem
 import com.example.workstation.whatsup.util.FirestoreUtil
 import com.google.firebase.firestore.ListenerRegistration
@@ -22,17 +24,19 @@ import com.xwray.groupie.OnItemClickListener
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_group.view.*
+import kotlinx.android.synthetic.main.layout_select_user.view.*
 import org.jetbrains.anko.support.v4.toast
 
 class GroupFragment : Fragment() {
 
+    private lateinit var mDialogView: View
     private lateinit var userListenerRegistration: ListenerRegistration
     private var shouldInitRecycleview=true
     private lateinit var myView:View
     //var users= mutableListOf<Item>()
     private lateinit var peopleSection: Section
+    private lateinit var userSelectSection: Section
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,10 +53,7 @@ class GroupFragment : Fragment() {
                 myView.group_name.text=currentGroup.groupName
                 myView.amount_group.text=currentGroup.abjectifAmount.toString()
                 //gestion du progress bar
-                myView.progressbar_amount.apply {
-                    max=currentGroup.abjectifAmount
-                    progress=GroupParameter.currenGroupTotalAmount
-                }
+                manageProgressBar()
 
             }
             else{
@@ -61,8 +62,7 @@ class GroupFragment : Fragment() {
             }
             myView.add_member_text_view.setOnClickListener {
                 if(currentGroup!=null){
-                    //gestion de dynamique link
-
+                    onShareClicked()
                 }
                 else{
                     toast("Veuillez choisir un groupe")
@@ -70,15 +70,40 @@ class GroupFragment : Fragment() {
                     startActivity(intent)
                 }
             }
+
+
+            myView.button_detail_group.setOnClickListener {
+                if (currentGroup != null) {
+                        FirestoreUtil.showDetailOfGroup(currentGroup, this@GroupFragment.context!!)
+                }
+            }
+            myView.linearLayout_see_detail.apply {
+                if (currentGroup != null) {
+                    visibility=View.VISIBLE
+                    setOnClickListener {
+                        FirestoreUtil.showDetailOfGroup(currentGroup,this.context)
+                    }
+                }
+                else{
+                    visibility=View.INVISIBLE
+                }
+            }
         }
         return myView
     }
 
-    private fun loadData() {
-        userListenerRegistration= FirestoreUtil.addUserListener(this@GroupFragment.context!!, this::updateRecycleView)
+    private fun manageProgressBar() {
+        myView.progressbar_amount.apply {
+            max=GroupParameter.currenGroupUsers!!.abjectifAmount
+            progress=GroupParameter.currenGroupTotalAmount
+        }
     }
 
-    private fun updateRecycleView(items: List<Item>){
+    private fun loadData() {
+       FirestoreUtil.addUserListener(this@GroupFragment.context!!, this::updateRecycleView)
+    }
+
+    private fun updateRecycleView(items: List<Item>,totalAmount:Int){
         fun init(){
             myView.recyclerView_users.apply {
                 layoutManager=LinearLayoutManager(this@GroupFragment.context)
@@ -88,6 +113,7 @@ class GroupFragment : Fragment() {
                     setOnItemClickListener(onItemClick)
                 }
             }
+            manageProgressBar()
             shouldInitRecycleview=false
         }
 
@@ -106,6 +132,39 @@ class GroupFragment : Fragment() {
     private val onItemClick= OnItemClickListener{ item, view ->
         if(item is UserItem){
             //action here
+        }
+    }
+
+    // TODO permet denvoyer des liens dynamiques
+    private fun onShareClicked() {
+        FirestoreUtil.addUserListenerForSelect(this@GroupFragment.context!!, this::updateRecycleViewAlertDialogue)
+    }
+
+    private fun updateRecycleViewAlertDialogue(items: List<Item>) {
+        GroupeCreateParameter.clearAllData()
+        mDialogView = LayoutInflater.from(this@GroupFragment.context).inflate(R.layout.layout_select_user, null)
+        mDialogView.recyclerView_select_user.apply {
+            layoutManager=LinearLayoutManager(this@GroupFragment.context)
+            adapter= GroupAdapter<ViewHolder>().apply {
+                userSelectSection=Section(items)
+                add(userSelectSection)
+                //setOnItemClickListener(onItemClick)
+            }
+        }
+        val mBuilder = AlertDialog.Builder(this@GroupFragment.context!!)
+            .setView(mDialogView)
+            .setTitle("Inviter des amis")
+        val  mAlertDialog = mBuilder.show()
+        mDialogView.button_send_link.setOnClickListener {
+            for (phone in GroupeCreateParameter.listOfMenbersNumber){
+                toast(phone)
+            }
+            GroupeCreateParameter.clearAllData()
+            mAlertDialog.dismiss()
+        }
+        mDialogView.button_cancel_alert_dialog.setOnClickListener {
+            GroupeCreateParameter.clearAllData()
+            mAlertDialog.dismiss()
         }
     }
 

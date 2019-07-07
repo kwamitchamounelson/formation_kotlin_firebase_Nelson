@@ -12,6 +12,7 @@ import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.OperatorParameter
 import com.example.workstation.moneypal.fragment.GroupFragment
 import com.example.workstation.moneypal.fragment.HomeFragment
+import org.jetbrains.anko.toast
 
 
 class MoneyPalActivity : AppCompatActivity() {
@@ -19,11 +20,20 @@ class MoneyPalActivity : AppCompatActivity() {
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
+                GroupParameter.currentFragment=1
                 replaceFragment(HomeFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_users -> {
-                replaceFragment(GroupFragment())
+                if(GroupParameter.currenGroupUsers!=null){
+                    GroupParameter.currentFragment=2
+                    replaceFragment(GroupFragment())
+                }
+                else{
+                    toast("Veuillez choisir un groupe")
+                    val intent=Intent(this,GroupActivity::class.java)
+                    startActivity(intent)
+                }
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -68,7 +78,7 @@ class MoneyPalActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.current_operator -> {
-                GroupParameter.currentFragment=1
+                //GroupParameter.currentFragment=1
                 if(OperatorParameter.CURRENT_OPERATOR.equals(AppConstants.ORANGE_MONEY_OPERATOR,true)){
                     changeOperator(AppConstants.MTN_MOBILE_MONEY_OPERATOR)
                 }
@@ -82,13 +92,18 @@ class MoneyPalActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            /*R.id.open_groups -> {
+                val intent = Intent(this, GroupActivity::class.java)
+                startActivity(intent)
+                return true
+            }*/
             R.id.orange_money -> {
-                GroupParameter.currentFragment=1
+                //GroupParameter.currentFragment=1
                 changeOperator(AppConstants.ORANGE_MONEY_OPERATOR)
                 return true
             }
             R.id.mobile_money -> {
-                GroupParameter.currentFragment=1
+                //GroupParameter.currentFragment=1
                 changeOperator(AppConstants.MTN_MOBILE_MONEY_OPERATOR)
                 return true
             }

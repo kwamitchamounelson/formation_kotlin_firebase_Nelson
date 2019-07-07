@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardBackgroundColor="#FFFF"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        android:layout_margin="4dp"
+        android:layout_height="wrap_content">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+        <CheckBox
+                android:layout_width="wrap_content"
+                android:shadowColor="@color/colorPrimary"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBox_group"/>
+        <ImageView
+                android:id="@+id/photo_user_group"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_account_circle_black_24dp"/>
+        <TextView android:id="@+id/user_name_group"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Nom"
+                  android:layout_marginLeft="5dp"
+                  android:textSize="15sp"
+                  android:textStyle="bold"
+                  android:textColor="@android:color/black"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
