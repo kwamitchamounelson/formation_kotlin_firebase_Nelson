@@ -17,6 +17,7 @@ import com.example.workstation.moneypal.entities.AcountParameter
 import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.GroupeCreateParameter
 import com.example.workstation.moneypal.recycleView.UserItem
+import com.example.workstation.moneypal.util.DynamicLinkUtil
 import com.example.workstation.whatsup.util.FirestoreUtil
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.GroupAdapter
@@ -62,7 +63,7 @@ class GroupFragment : Fragment() {
             }
             myView.add_member_text_view.setOnClickListener {
                 if(currentGroup!=null){
-                    onShareClicked()
+                    loadUsers()
                 }
                 else{
                     toast("Veuillez choisir un groupe")
@@ -135,8 +136,7 @@ class GroupFragment : Fragment() {
         }
     }
 
-    // TODO permet denvoyer des liens dynamiques
-    private fun onShareClicked() {
+    private fun loadUsers() {
         FirestoreUtil.addUserListenerForSelect(this@GroupFragment.context!!, this::updateRecycleViewAlertDialogue)
     }
 
@@ -156,9 +156,13 @@ class GroupFragment : Fragment() {
             .setTitle("Inviter des amis")
         val  mAlertDialog = mBuilder.show()
         mDialogView.button_send_link.setOnClickListener {
-            for (phone in GroupeCreateParameter.listOfMenbersNumber){
-                toast(phone)
-            }
+            // TODO permet denvoyer des liens dynamiques
+            var intent= Intent()
+            val msg="visiter mon site : ${DynamicLinkUtil.generateContentLink()}"
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT,msg)
+            intent.type = "text/plain"
+            startActivity(intent)
             GroupeCreateParameter.clearAllData()
             mAlertDialog.dismiss()
         }

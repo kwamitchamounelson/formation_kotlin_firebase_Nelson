@@ -12,6 +12,7 @@ import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.OperatorParameter
 import com.example.workstation.moneypal.fragment.GroupFragment
 import com.example.workstation.moneypal.fragment.HomeFragment
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import org.jetbrains.anko.toast
 
 
@@ -50,8 +51,22 @@ class MoneyPalActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_money_pal)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        getDynamicLink()
         changeOperator(OperatorParameter.CURRENT_OPERATOR)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+    }
+
+    private fun getDynamicLink() {
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+            .addOnSuccessListener {
+                if(it!=null){
+                    var deepLink=it.link
+                    toast(deepLink.toString())
+                }
+            }
+            .addOnFailureListener {
+                toast(it.toString())
+            }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {

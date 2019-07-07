@@ -1,9 +1,13 @@
 package com.example.workstation.moneypal.util
 
+import android.net.Uri
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+
 object DynamicLinkUtil {
-    /*fun generateContentLink(): Uri {
-        val baseUrl = Uri.parse("https://workstation.page.link")
-        val domain = "https://moneypal.page.link"
+    fun generateContentLink(): Uri {
+        val baseUrl = Uri.parse("https://www.youtube.com/watch?v=22uV3hV91M8&vl=fr")
+        val domain = "https://workstation.page.link"
 
         val link = FirebaseDynamicLinks.getInstance()
             .createDynamicLink()
@@ -14,5 +18,5 @@ object DynamicLinkUtil {
             .buildDynamicLink()
 
         return link.uri
-    }*/
+    }
 }
