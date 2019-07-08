@@ -1,6 +1,9 @@
 package com.example.workstation.moneypal
 
 object AppConstants {
+    const val SPLITOR_OF_LINK="groupId"
+    const val URL_APK_DOWNLOAD="https://drive.google.com/open?id=1efJ_gbh5QiT_4uYHp1CsHCeDlhYN6Ne4"
+    const val URL_ICON_DYNAMIC_LINK="https://firebasestorage.googleapis.com/v0/b/moneypal-88e28.appspot.com/o/moneypal.jpg?alt=media&token=68fbeb8d-37a9-47f1-8e42-e40e098e44a6"
     const val ACTION_SEND_MONEY_ORANGE_ORANGE="7bc2510f"
     const val USER="USER"
     const val CONTRIBUTION="CONTRIBUTION"

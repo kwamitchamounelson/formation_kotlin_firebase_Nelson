@@ -63,7 +63,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
-                        android:host="www.youtube.com"
+                        android:host="workstation.page.link"
                         android:scheme="https"/>
             </intent-filter>
         </activity>

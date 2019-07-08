@@ -38,6 +38,7 @@ class GroupFragment : Fragment() {
     //var users= mutableListOf<Item>()
     private lateinit var peopleSection: Section
     private lateinit var userSelectSection: Section
+    val currentGroup=GroupParameter.currenGroupUsers
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +50,6 @@ class GroupFragment : Fragment() {
         view.apply {
             myView.info_date_group.text=AcountParameter.infoDayAcount
             myView.info_solde_group.text=AcountParameter.infoSoldeAcount
-            val currentGroup=GroupParameter.currenGroupUsers
             if(currentGroup!=null){
                 myView.group_name.text=currentGroup.groupName
                 myView.amount_group.text=currentGroup.abjectifAmount.toString()
@@ -153,16 +153,22 @@ class GroupFragment : Fragment() {
         }
         val mBuilder = AlertDialog.Builder(this@GroupFragment.context!!)
             .setView(mDialogView)
-            .setTitle("Inviter des amis")
+            .setTitle("Ajouter ou inviter des participants")
         val  mAlertDialog = mBuilder.show()
-        mDialogView.button_send_link.setOnClickListener {
-            // TODO permet denvoyer des liens dynamiques
-            var intent= Intent()
-            val msg="visiter mon site : ${DynamicLinkUtil.generateContentLink()}"
-            intent.action = Intent.ACTION_SEND
-            intent.putExtra(Intent.EXTRA_TEXT,msg)
-            intent.type = "text/plain"
-            startActivity(intent)
+        mDialogView.button_share_link.setOnClickListener {
+            DynamicLinkUtil.generateContentLink(this@GroupFragment.context!!,currentGroup!!.groupId,onComplete = {shortLink->
+                var intent= Intent()
+                val msg=shortLink
+                intent.action = Intent.ACTION_SEND
+                intent.putExtra(Intent.EXTRA_TEXT,msg)
+                intent.type = "text/plain"
+                startActivity(intent)
+                GroupeCreateParameter.clearAllData()
+                mAlertDialog.dismiss()
+            })
+        }
+        mDialogView.button_add_user_select.setOnClickListener {
+            // TODO permet dajouter des user au groupe
             GroupeCreateParameter.clearAllData()
             mAlertDialog.dismiss()
         }

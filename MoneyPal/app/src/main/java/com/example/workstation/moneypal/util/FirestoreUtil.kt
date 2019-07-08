@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.icu.util.CurrencyAmount
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.workstation.moneypal.entities.ContributionUser
 import com.example.workstation.moneypal.entities.GroupParameter
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator
 import com.xwray.groupie.kotlinandroidextensions.Item
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.toast
 
 object FirestoreUtil {
@@ -90,6 +92,7 @@ object FirestoreUtil {
 
 
     fun addUserListenerForSelect(context: Context, onListen:(List<Item>)->Unit){
+        val progressDialog=context.indeterminateProgressDialog("Veillez patienter")
         val currentGroup=GroupParameter.currenGroupUsers
         firestoreInstance.collection("users")
             .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
@@ -107,6 +110,7 @@ object FirestoreUtil {
                         }
                     }
                 }
+                progressDialog.dismiss()
                 onListen(items)
             }
     }
