@@ -1,10 +1,14 @@
 package com.example.workstation.moneypal.fragment
 
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.ClipDrawable
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -30,6 +34,7 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.support.v4.act
 import org.jetbrains.anko.support.v4.indeterminateProgressDialog
 import org.jetbrains.anko.support.v4.toast
 
@@ -37,6 +42,7 @@ import org.jetbrains.anko.support.v4.toast
 class HomeFragment : Fragment() {
 
 
+    private val MY_PERMISSIONS_REQUEST_READ_CONTACTS=0
     var operations= mutableListOf<Item>()
     var detailsOperationsItems= mutableListOf<Item>()
     private lateinit var itemSectionOperation: Section
@@ -53,12 +59,6 @@ class HomeFragment : Fragment() {
     ): View? {
         myView= inflater.inflate(R.layout.fragment_home, container, false)
         myView.apply {
-            /*GlideApp.with(this@HomeFragment)
-                .load("")
-                .transform(CircleCrop())
-                .placeholder(R.drawable.ic_account_circle_black_24dp)
-                .error(R.drawable.ic_account_circle_black_24dp)
-                .into(myView.image_view_user)*/
             try {
                 FirestoreUtil.getCurrentUser { user ->
                     if(user.photo!=null){
@@ -88,7 +88,24 @@ class HomeFragment : Fragment() {
             loadLasOperation()
         }
         initAllOperationTypes()
-        loadData(null)
+        if (ContextCompat.checkSelfPermission(this@HomeFragment.context!!, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED){
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this@HomeFragment.act, Manifest.permission.READ_SMS)) {
+                loadData(null)
+            }
+            else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this@HomeFragment.act,
+                    arrayOf(Manifest.permission.READ_SMS),
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS
+                )
+            }
+        }
+        else{
+            loadData(null)
+        }
         val itemDecor = DividerItemDecoration(this@HomeFragment.context, ClipDrawable.HORIZONTAL)
         myView.recyclerView_detail.addItemDecoration(itemDecor)
         return myView
@@ -187,6 +204,22 @@ class HomeFragment : Fragment() {
         }
         updateRecycleViewDetailOperation()
         progressDialog.dismiss()
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_READ_CONTACTS -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    loadData(null)
+                } else {
+                    toast("Vous devez accepter la permission")
+                }
+                return
+            }
+            else -> return
+        }
     }
 
     private val onItemClickOperation= OnItemClickListener{ item, view ->

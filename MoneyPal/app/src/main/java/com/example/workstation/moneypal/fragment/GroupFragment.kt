@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.workstation.moneypal.GroupActivity
+import com.example.workstation.moneypal.MoneyPalActivity
 import com.example.workstation.moneypal.R
 import com.example.workstation.moneypal.entities.AcountParameter
 import com.example.workstation.moneypal.entities.GroupParameter
@@ -19,6 +20,7 @@ import com.example.workstation.moneypal.entities.GroupeCreateParameter
 import com.example.workstation.moneypal.recycleView.UserItem
 import com.example.workstation.moneypal.util.DynamicLinkUtil
 import com.example.workstation.whatsup.util.FirestoreUtil
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.OnItemClickListener
@@ -27,6 +29,8 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.fragment_group.view.*
 import kotlinx.android.synthetic.main.layout_select_user.view.*
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.support.v4.indeterminateProgressDialog
 import org.jetbrains.anko.support.v4.toast
 
 class GroupFragment : Fragment() {
@@ -63,7 +67,12 @@ class GroupFragment : Fragment() {
             }
             myView.add_member_text_view.setOnClickListener {
                 if(currentGroup!=null){
-                    loadUsers()
+                    if(currentGroup.creatorPhone.equals(FirebaseAuth.getInstance().currentUser!!.phoneNumber,true)){
+                        loadUsers()
+                    }
+                    else{
+                        toast("Seule le createur du groupe peut ajouter des membres et vous ne l'etes pas")
+                    }
                 }
                 else{
                     toast("Veuillez choisir un groupe")
@@ -75,7 +84,7 @@ class GroupFragment : Fragment() {
 
             myView.button_detail_group.setOnClickListener {
                 if (currentGroup != null) {
-                        FirestoreUtil.showDetailOfGroup(currentGroup, this@GroupFragment.context!!)
+                    FirestoreUtil.showDetailOfGroup(currentGroup, this@GroupFragment.context!!)
                 }
             }
             myView.linearLayout_see_detail.apply {
@@ -101,7 +110,7 @@ class GroupFragment : Fragment() {
     }
 
     private fun loadData() {
-       FirestoreUtil.addUserListener(this@GroupFragment.context!!, this::updateRecycleView)
+        FirestoreUtil.addUserListener(this@GroupFragment.context!!, this::updateRecycleView)
     }
 
     private fun updateRecycleView(items: List<Item>,totalAmount:Int){
@@ -156,9 +165,9 @@ class GroupFragment : Fragment() {
             .setTitle("Ajouter ou inviter des participants")
         val  mAlertDialog = mBuilder.show()
         mDialogView.button_share_link.setOnClickListener {
-            DynamicLinkUtil.generateContentLink(this@GroupFragment.context!!,currentGroup!!.groupId,onComplete = {shortLink->
+            DynamicLinkUtil.generateContentLink(this@GroupFragment.context!!,currentGroup!!,onComplete = {shortLink->
                 var intent= Intent()
-                val msg=shortLink
+                val msg="Le groupe d'objectif ${currentGroup.groupName} vous invite à le rejoindre sur MoneyPal via ce lien :\n$shortLink"
                 intent.action = Intent.ACTION_SEND
                 intent.putExtra(Intent.EXTRA_TEXT,msg)
                 intent.type = "text/plain"
@@ -168,9 +177,25 @@ class GroupFragment : Fragment() {
             })
         }
         mDialogView.button_add_user_select.setOnClickListener {
-            // TODO permet dajouter des user au groupe
-            GroupeCreateParameter.clearAllData()
-            mAlertDialog.dismiss()
+            if(GroupeCreateParameter.listOfMenbersNumber.isNotEmpty()){
+                val progressDialog=indeterminateProgressDialog("Veillez patienter")
+                FirestoreUtil.addMemberOnGroup(GroupeCreateParameter.listOfMenbersNumber,currentGroup!!,onComplete = {success ->
+                    if (success){
+                        progressDialog.dismiss()
+                        toast("Membres ajoutés avec succès")
+                        loadData()
+                    }
+                    else{
+                        progressDialog.dismiss()
+                        toast("Echec d'ajout des membres")
+                    }
+                    GroupeCreateParameter.clearAllData()
+                    mAlertDialog.dismiss()
+                })
+            }
+            else{
+                toast("Veuillez sélectioner au moins un utilisateur")
+            }
         }
         mDialogView.button_cancel_alert_dialog.setOnClickListener {
             GroupeCreateParameter.clearAllData()

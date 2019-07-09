@@ -166,7 +166,7 @@ object FirestoreUtil {
 
 
     fun CreateGroupe(group:GroupUsers,photo:String?=null,onComplete: (groupId:String) -> Unit){
-        val refGroupe = currentGroupColRef.document()
+        val refGroupe = firestoreInstance.collection("groups").document()
         refGroupe.set(group)
             .addOnSuccessListener {
                 val refGroup= firestoreInstance.collection("groups").document(refGroupe.id)
@@ -185,10 +185,63 @@ object FirestoreUtil {
     }
 
 
+    fun addMemberOnGroup(listeOfPhone:ArrayList<String>,group:GroupUsers,onComplete: (success:Boolean) -> Unit){
+        val refGroupe = firestoreInstance.collection("groups").document(group.groupId)
+        var tempGroup=group
+        var listeOfPhonegood=listeOfPhone
+        for (phone in listeOfPhone){
+            if(!tempGroup.listOfUsers.contains(phone)){
+                tempGroup.listOfUsers.add(phone)
+            }
+            else{
+                listeOfPhonegood.remove(phone)
+            }
+        }
+        refGroupe.set(tempGroup, SetOptions.merge())
+            .addOnSuccessListener {
+                for (phone in listeOfPhonegood){
+                    addUpdateUserAmountGroup(phone,0,group.groupId,onComplete = {
+                        onComplete(true)
+                    })
+                }
+            }
+            .addOnFailureListener {
+                onComplete(false)
+            }
+    }
+
+    fun getGroupById(groupId: String,onComplete: (group:GroupUsers?) -> Unit) {
+        firestoreInstance.collection("groups").document(groupId)
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot != null) {
+                    onComplete(documentSnapshot.toObject(GroupUsers::class.java))
+                }
+                else{
+                    onComplete(null)
+                }
+            }
+    }
+
+
+    fun getApkurl(onComplete: (urlApk:String?) -> Unit){
+        firestoreInstance.collection("dynamiclink").document("apk")
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot != null) {
+                    onComplete(documentSnapshot.getString("url"))
+                }
+                else{
+                    onComplete(null)
+                }
+            }
+    }
+
+
+
+
     fun addUpdateUserAmountGroup(userPhone:String,amount: Int,groupId1:String,onComplete: (groupId2:String) -> Unit){
         val contributionUser=ContributionUser(userPhone,groupId1,amount)
-        val refGroupe = currentUserDocRef.collection("groups")
-            .document(groupId1).set(contributionUser)
+        val refGroupe = firestoreInstance.collection("users").document(userPhone).collection("groups")
+            .document(groupId1).set(contributionUser, SetOptions.merge())
             .addOnSuccessListener{
                 onComplete(groupId1)
             }

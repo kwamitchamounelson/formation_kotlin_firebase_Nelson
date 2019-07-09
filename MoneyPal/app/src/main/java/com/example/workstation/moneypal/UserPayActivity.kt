@@ -55,10 +55,11 @@ class UserPayActivity : AppCompatActivity(),Hover.DownloadListener{
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val sessionTextArr = data!!.getStringArrayExtra("ussd_messages")
-            val uuid = data.getStringExtra("uuid")
-            if(sessionTextArr.isNullOrEmpty()){
+            //TODO verifier le message et modifier la contribution du user
+            //val uuid = data.getStringExtra("uuid")
+            /*if(sessionTextArr.isNullOrEmpty()){
                 toast(sessionTextArr.last())
-            }
+            }*/
             val intent = Intent(this, MoneyPalActivity::class.java)
             startActivity(intent)
         } else if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
