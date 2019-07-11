@@ -124,38 +124,40 @@ class HomeFragment : Fragment() {
 
     //chargement des donnee dans le recycleView
     private fun updateRecycleViewDetailOperation() {
-        fun init(){
-            myView.recyclerView_detail.apply {
-                layoutManager= LinearLayoutManager(this@HomeFragment.context)
-                adapter= GroupAdapter<ViewHolder>().apply {
-                    itemSectionDetailOperation= Section(detailsOperationsItems)
-                    add(itemSectionDetailOperation)
-                    setOnItemClickListener(onItemClickDetailOperation)
+        try {
+            fun init(){
+                myView.recyclerView_detail.apply {
+                    layoutManager= LinearLayoutManager(this@HomeFragment.context)
+                    adapter= GroupAdapter<ViewHolder>().apply {
+                        itemSectionDetailOperation= Section(detailsOperationsItems)
+                        add(itemSectionDetailOperation)
+                        setOnItemClickListener(onItemClickDetailOperation)
+                    }
                 }
+                shouldInitRecycleview=false
             }
-            shouldInitRecycleview=false
-        }
-        fun updateItem()=itemSectionDetailOperation.update(detailsOperationsItems)
+            fun updateItem()=itemSectionDetailOperation.update(detailsOperationsItems)
 
-        if(shouldInitRecycleview){
-            init()
-        }
-        else{
-            updateItem()
-        }
+            if(shouldInitRecycleview){
+                init()
+            }
+            else{
+                updateItem()
+            }
 
-        var str=""
-        val count=detailsOperationsItems.size
-        if(count==0){
-            str="Aucune Opération"
-        }
-        else if(count==1){
-            str="Une Opération"
-        }
-        else{
-            str="${detailsOperationsItems.size} Opérations"
-        }
-        toast(str)
+            var str=""
+            val count=detailsOperationsItems.size
+            if(count==0){
+                str="Aucune Opération"
+            }
+            else if(count==1){
+                str="Une Opération"
+            }
+            else{
+                str="${detailsOperationsItems.size} Opérations"
+            }
+            toast(str)
+        }catch (e:Exception){}
     }
 
     private fun initAllOperationTypes() {
@@ -179,7 +181,6 @@ class HomeFragment : Fragment() {
         detailsOperationsItems.clear()
         currentListOfDetailOperation.clear()
         listOfMessages=SmsUtil.getAllSms(this@HomeFragment.context!!,operation)
-        //toast("${listOfMessages.size}")
         var op:Operation?
         var detailOperation:DetailOperation?
         for (sms in listOfMessages){

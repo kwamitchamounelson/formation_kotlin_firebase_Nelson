@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.layout_select_user.view.*
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.support.v4.indeterminateProgressDialog
 import org.jetbrains.anko.support.v4.toast
+import java.lang.Exception
 
 class GroupFragment : Fragment() {
 
@@ -57,9 +58,6 @@ class GroupFragment : Fragment() {
             if(currentGroup!=null){
                 myView.group_name.text=currentGroup.groupName
                 myView.amount_group.text=currentGroup.abjectifAmount.toString()
-                //gestion du progress bar
-                manageProgressBar()
-
             }
             else{
                 myView.group_name.text=""
@@ -114,29 +112,39 @@ class GroupFragment : Fragment() {
     }
 
     private fun updateRecycleView(items: List<Item>,totalAmount:Int){
-        fun init(){
-            myView.recyclerView_users.apply {
-                layoutManager=LinearLayoutManager(this@GroupFragment.context)
-                adapter= GroupAdapter<ViewHolder>().apply {
-                    peopleSection=Section(items)
-                    add(peopleSection)
-                    setOnItemClickListener(onItemClick)
+        try {
+            fun init(){
+                myView.recyclerView_users.apply {
+                    layoutManager=LinearLayoutManager(this@GroupFragment.context)
+                    adapter= GroupAdapter<ViewHolder>().apply {
+                        peopleSection=Section(items)
+                        add(peopleSection)
+                        setOnItemClickListener(onItemClick)
+                    }
+                }
+                shouldInitRecycleview=false
+            }
+
+            fun updateItem()=peopleSection.update(items)
+
+            if(shouldInitRecycleview){
+                init()
+            }
+            else{
+                updateItem()
+            }
+            val itemDecor = DividerItemDecoration(this@GroupFragment.context, ClipDrawable.HORIZONTAL)
+            myView.recyclerView_users.addItemDecoration(itemDecor)
+            GroupParameter.currenGroupTotalAmount=0
+            for (item in items){
+                if(item is UserItem){
+                    GroupParameter.currenGroupTotalAmount+=item.contributionUser.amount
                 }
             }
+            //gestion du progress bar
             manageProgressBar()
-            shouldInitRecycleview=false
-        }
-
-        fun updateItem()=peopleSection.update(items)
-
-        if(shouldInitRecycleview){
-            init()
-        }
-        else{
-            updateItem()
-        }
-        val itemDecor = DividerItemDecoration(this@GroupFragment.context, ClipDrawable.HORIZONTAL)
-        myView.recyclerView_users.addItemDecoration(itemDecor)
+            myView.amount_current_group.text=GroupParameter.currenGroupTotalAmount.toString()
+        }catch (e:Exception){}
     }
 
     private val onItemClick= OnItemClickListener{ item, view ->

@@ -32,8 +32,6 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.example.workstation.moneypal.MoneyPalActivity"/>
         </activity>
-        <activity android:name=".YourPaymentResultActivity">
-        </activity>
         <activity android:name=".DetailOperationActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"

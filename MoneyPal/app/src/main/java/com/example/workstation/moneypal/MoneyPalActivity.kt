@@ -90,6 +90,8 @@ class MoneyPalActivity : AppCompatActivity() {
                                         }
                                         isMember=false
                                         FirestoreUtil.showAlertDilogue(title,message,this)
+                                        GroupParameter.currentFragment=2
+                                        GroupParameter.currenGroupUsers=group
                                         //progressDialog.dismiss()
                                     })
                                 }

@@ -11,11 +11,15 @@ import com.hover.sdk.api.HoverParameters
 import kotlinx.android.synthetic.main.activity_user_pay.*
 import org.jetbrains.anko.toast
 import java.lang.Exception
-import java.util.ArrayList
 import android.widget.Toast
 import android.app.Activity
 import android.content.Intent
-
+import com.example.workstation.moneypal.entities.Operation
+import com.example.workstation.moneypal.util.SmsUtil
+import com.example.workstation.whatsup.util.FirestoreUtil
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.support.v4.indeterminateProgressDialog
+import java.util.*
 
 
 class UserPayActivity : AppCompatActivity(),Hover.DownloadListener{
@@ -24,6 +28,7 @@ class UserPayActivity : AppCompatActivity(),Hover.DownloadListener{
     var currentUser:User?=null
     val currentGroup=GroupParameter.currenGroupUsers
     var contributionUser:ContributionUser?=null
+    var amount=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_pay)
@@ -37,7 +42,7 @@ class UserPayActivity : AppCompatActivity(),Hover.DownloadListener{
         initData()
         button_pay_contribution.setOnClickListener {
             try {
-                val amount=amount_contribution.text.toString().toInt()
+                amount=amount_contribution.text.toString().toInt()
                 val intent=HoverParameters.Builder(this)
                     .request(AppConstants.ACTION_SEND_MONEY_ORANGE_ORANGE)
                     .extra("1",currentGroup!!.creatorPhone!!.substring(4))
@@ -54,16 +59,32 @@ class UserPayActivity : AppCompatActivity(),Hover.DownloadListener{
     //verification de la reponse
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val sessionTextArr = data!!.getStringArrayExtra("ussd_messages")
             //TODO verifier le message et modifier la contribution du user
-            //val uuid = data.getStringExtra("uuid")
-            /*if(sessionTextArr.isNullOrEmpty()){
-                toast(sessionTextArr.last())
-            }*/
-            val intent = Intent(this, MoneyPalActivity::class.java)
-            startActivity(intent)
+            val sessionTextArr = data!!.getStringArrayExtra("ussd_messages")
+            var strMessage=""
+            for (str in sessionTextArr){
+                strMessage+=str
+            }
+            val keyWord="Transfert initie"
+            if(strMessage.replace("\\s".toRegex(), "").toLowerCase(Locale.ROOT)
+                    .contains(keyWord.replace("\\s".toRegex(), "").toLowerCase(Locale.ROOT))){
+                val totalAmount=(amount+contributionUser!!.amount)
+                val progressDialog=indeterminateProgressDialog("Veillez patienter...")
+                FirestoreUtil.addUpdateUserAmountGroup(currentUser!!.phoneNumber,totalAmount,currentGroup!!.groupId,onComplete = {
+                    progressDialog.dismiss()
+                    val intent = Intent(this, MoneyPalActivity::class.java)
+                    startActivity(intent)
+                })
+            }
+            else{
+                toast("Paiement non validé")
+                val intent = Intent(this, MoneyPalActivity::class.java)
+                startActivity(intent)
+            }
         } else if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
             toast("Error: " + data!!.getStringExtra("error"))
+            val intent = Intent(this, MoneyPalActivity::class.java)
+            startActivity(intent)
         }
     }
 

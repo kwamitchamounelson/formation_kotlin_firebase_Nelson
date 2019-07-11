@@ -66,6 +66,11 @@ class GroupActivity : AppCompatActivity() {
         recycle_view_groups.addItemDecoration(itemDecor)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        FirestoreUtil.removeListener(groupListenerRegistration)
+    }
+
     private val onItemClick= OnItemClickListener{ item, view ->
         if(item is GroupUserItem){
             GroupParameter.currenGroupUsers=item.group

@@ -69,7 +69,6 @@ object FirestoreUtil {
         val items= mutableListOf<Item>()
         var contributionUser:ContributionUser
         var user:User
-        GroupParameter.currenGroupTotalAmount=0
         val currentGroup=GroupParameter.currenGroupUsers
         for (phone in currentGroup!!.listOfUsers){
             var curentUserDoc=firestoreInstance.collection("users").document(phone!!)
@@ -79,10 +78,8 @@ object FirestoreUtil {
                     .document(currentGroup.groupId)
                     .addSnapshotListener { documentSnapshot2, firebaseFirestoreException ->
                         user= documentSnapshot!!.toObject(User::class.java)!!
-                        //Toast.makeText(context,"${user}",Toast.LENGTH_SHORT).show()
                         contributionUser= documentSnapshot2!!.toObject(ContributionUser::class.java)!!
-                        GroupParameter.currenGroupTotalAmount+=contributionUser.amount
-                        //Toast.makeText(context,"${user.name}",Toast.LENGTH_SHORT).show()
+                        //GroupParameter.currenGroupTotalAmount+=contributionUser.amount
                         items.add(UserItem(user,contributionUser,context))
                         onListen(items,GroupParameter.currenGroupTotalAmount)
                     }

@@ -6,7 +6,7 @@ import java.util.*
 data class DetailOperation(
     val operation: Operation?,
     val date:Date?,
-    var amount:Int,
+    var amount:Double,
     val smsObject: SmsObject?) :Serializable {
-    constructor() : this(null,null,0,null)
+    constructor() : this(null,null,0.0,null)
 }

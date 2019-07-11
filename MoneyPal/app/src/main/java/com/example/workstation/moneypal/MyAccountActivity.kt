@@ -70,26 +70,28 @@ class MyAccountActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        FirestoreUtil.getCurrentUser { user ->
-            name_user_accoun.setText(user.name)
-            Toast.makeText(this,user.phoneNumber, Toast.LENGTH_LONG).show()
-            if(!pictureJustChanged && user.photo!=null){
+        try {
+            FirestoreUtil.getCurrentUser { user ->
+                name_user_accoun.setText(user.name)
+                Toast.makeText(this,user.phoneNumber, Toast.LENGTH_LONG).show()
+                if(!pictureJustChanged && user.photo!=null){
 
-                GlideApp.with(this)
-                    .load(StorageUtil.pathToReference(user.photo!!))
-                    .transform(CircleCrop())
-                    .placeholder(R.drawable.ic_account_circle_black_24dp)
-                    .error(R.drawable.ic_account_circle_black_24dp)
-                    .into(photo_user_account2)
+                    GlideApp.with(this)
+                        .load(StorageUtil.pathToReference(user.photo!!))
+                        .transform(CircleCrop())
+                        .placeholder(R.drawable.ic_account_circle_black_24dp)
+                        .error(R.drawable.ic_account_circle_black_24dp)
+                        .into(photo_user_account2)
+                }
+                else{
+                    GlideApp.with(this)
+                        .load("")
+                        .transform(CircleCrop())
+                        .placeholder(R.drawable.ic_account_circle_black_24dp)
+                        .error(R.drawable.ic_account_circle_black_24dp)
+                        .into(photo_user_account2)
+                }
             }
-            else{
-                GlideApp.with(this)
-                    .load("")
-                    .transform(CircleCrop())
-                    .placeholder(R.drawable.ic_account_circle_black_24dp)
-                    .error(R.drawable.ic_account_circle_black_24dp)
-                    .into(photo_user_account2)
-            }
-        }
+        }catch (e:Exception){}
     }
 }

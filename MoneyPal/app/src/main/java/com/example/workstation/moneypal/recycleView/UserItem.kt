@@ -27,6 +27,15 @@ Item() {
         viewHolder.user_name.text=user.name
         viewHolder.day.text="Lundi 5"
         viewHolder.amount_text_user.text="0000"
+        val currentGroup= GroupParameter.currenGroupUsers
+        viewHolder.buton_is_admin.apply {
+            if(user.phoneNumber.equals(currentGroup!!.creatorPhone,true)){
+                visibility=View.VISIBLE
+            }
+            else{
+                visibility=View.GONE
+            }
+        }
         if(user.phoneNumber.equals(FirebaseAuth.getInstance().currentUser!!.phoneNumber,true)){
             var color=Color.parseColor("#f6f399")
             if(OperatorParameter.CURRENT_OPERATOR.equals(AppConstants.ORANGE_MONEY_OPERATOR)){
@@ -37,7 +46,6 @@ Item() {
                 visibility=View.VISIBLE
                 setOnClickListener {
                     //implementation de la participation du user(utilisation d'un alertDialog ou utilisation de monetbilUI)
-                    val currentGroup= GroupParameter.currenGroupUsers
                     if(currentGroup!=null){
                         if(!(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!.equals(currentGroup.creatorPhone,true))){
                             val intent=Intent(context,UserPayActivity::class.java)

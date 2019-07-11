@@ -52,13 +52,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/progressbar_amount"/>
-            <TextView
-                    android:id="@+id/amount_group"
-                    android:layout_gravity="right"
-                    android:textColor="#FFFF"
-                    android:text="5000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:id="@+id/amount_current_group"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorAccent"
+                        android:text="0000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                        android:id="@+id/amount_group"
+                        android:layout_gravity="end"
+                        android:textColor="#FFFF"
+                        android:text="0000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
             <TextView
                     android:id="@+id/info_date_group"
                     android:textColor="#FFFF"

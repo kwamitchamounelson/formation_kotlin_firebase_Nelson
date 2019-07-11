@@ -8,12 +8,14 @@ object OperationData {
     val factureEneoOperation=Operation(AppConstants.FACTURE_ENEO)
     val retraitOperation=Operation(AppConstants.REATRAIT_D_ARGENT)
     val depotOperation=Operation(AppConstants.DEPOTS)
+    val internetOperation=Operation(AppConstants.FORFAIT_INTERNET)
 
 
     //liste des operation
     val listeOfOperation= arrayListOf<Operation>(
         transfereOperation,
         achatCrediOperation,
+        internetOperation,
         factureEneoOperation,
         retraitOperation,
         depotOperation

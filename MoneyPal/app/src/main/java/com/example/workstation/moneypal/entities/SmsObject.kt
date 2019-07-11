@@ -27,7 +27,7 @@ data class SmsObject(
                 }
             }
             if(isOperation && !listOfKeWord.isEmpty()){
-                detailOperation= DetailOperation(operation,dateReceive,0,this)
+                detailOperation= DetailOperation(operation,dateReceive,0.0,this)
                 break
             }
         }

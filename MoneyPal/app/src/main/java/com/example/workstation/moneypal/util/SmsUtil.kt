@@ -85,7 +85,13 @@ object SmsUtil {
             AppConstants.TRANSFERE_D_ARGENT->{
                 when(OperatorParameter.CURRENT_OPERATOR){
                     AppConstants.ORANGE_MONEY_OPERATOR->{
-
+                        list= arrayListOf(
+                            "Transfert de",
+                            "vers",
+                            "reussi",
+                            "Frais",
+                            "Nouveau Solde"
+                        )
                     }
                     AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
@@ -95,7 +101,22 @@ object SmsUtil {
             AppConstants.ACHAT_DE_CREDIT->{
                 when(OperatorParameter.CURRENT_OPERATOR){
                     AppConstants.ORANGE_MONEY_OPERATOR->{
+                        list= arrayListOf(
+                            "Rechargement reussi"
+                        )
+                    }
+                    AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
+                    }
+                }
+            }
+            AppConstants.FORFAIT_INTERNET->{
+                when(OperatorParameter.CURRENT_OPERATOR){
+                    AppConstants.ORANGE_MONEY_OPERATOR->{
+                        list= arrayListOf(
+                            "Paiement de INTERNET",
+                            "reussi par"
+                        )
                     }
                     AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
@@ -159,8 +180,8 @@ object SmsUtil {
     }
 
     //TODO FONCION RETOURNANT LE SOLDE D'UN UTILISATEUR A PARTIR DE SA DERNIERE OPERATION
-    fun getTheSolde(detailOperation: DetailOperation?):Int{
-        var solde:Double= 0.0
+    fun getTheSolde(detailOperation: DetailOperation?):Double{
+        var solde= 0.0
         val operation=detailOperation!!.operation
         val smsObjet=detailOperation!!.smsObject
         val messageBody=smsObjet!!.messageBody.replace("\\s".toRegex(), "").toLowerCase(Locale.ROOT)
@@ -169,7 +190,19 @@ object SmsUtil {
 
                 when(OperatorParameter.CURRENT_OPERATOR){
                     AppConstants.ORANGE_MONEY_OPERATOR->{
-
+                        val splitor1="nouveausolde:"
+                        val tab=messageBody.split(splitor1)
+                        if(tab.isNotEmpty()){
+                            val splitor2="fcfa"
+                            val tab2=(tab[1]).split(splitor2)
+                            if(tab2.isNotEmpty()){
+                                solde=try {
+                                    tab2[0].toDouble()
+                                }catch (e:Exception){
+                                    0.0
+                                }
+                            }
+                        }
                     }
                     AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
@@ -181,7 +214,43 @@ object SmsUtil {
 
                 when(OperatorParameter.CURRENT_OPERATOR){
                     AppConstants.ORANGE_MONEY_OPERATOR->{
+                        val splitor1="nouveausolde:"
+                        val tab=messageBody.split(splitor1)
+                        if(tab.isNotEmpty()){
+                            val splitor2="fcfa"
+                            val tab2=(tab[1]).split(splitor2)
+                            if(tab2.isNotEmpty()){
+                                solde=try {
+                                    tab2[0].toDouble()
+                                }catch (e:Exception){
+                                    0.0
+                                }
+                            }
+                        }
+                    }
+                    AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
+                    }
+                }
+
+            }
+            AppConstants.FORFAIT_INTERNET->{
+
+                when(OperatorParameter.CURRENT_OPERATOR){
+                    AppConstants.ORANGE_MONEY_OPERATOR->{
+                        val splitor1="solde:"
+                        val tab=messageBody.split(splitor1)
+                        if(tab.isNotEmpty()){
+                            val splitor2="fcfa"
+                            val tab2=(tab[1]).split(splitor2)
+                            if(tab2.isNotEmpty()){
+                                solde=try {
+                                    tab2[0].toDouble()
+                                }catch (e:Exception){
+                                    0.0
+                                }
+                            }
+                        }
                     }
                     AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
@@ -274,7 +343,7 @@ object SmsUtil {
                 solde=0.0
             }
         }
-        return solde.toInt()
+        return solde
     }
 
 
@@ -291,7 +360,19 @@ object SmsUtil {
 
                         when(OperatorParameter.CURRENT_OPERATOR){
                             AppConstants.ORANGE_MONEY_OPERATOR->{
-
+                                val splitor1="montantnet:"
+                                val tab=messageBody.split(splitor1)
+                                if(tab.isNotEmpty()){
+                                    val splitor2="fcfa"
+                                    val tab2=(tab[1]).split(splitor2)
+                                    if(tab2.isNotEmpty()){
+                                        solde=try {
+                                            tab2[0].toDouble()
+                                        }catch (e:Exception){
+                                            0.0
+                                        }
+                                    }
+                                }
                             }
                             AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
@@ -303,7 +384,43 @@ object SmsUtil {
 
                         when(OperatorParameter.CURRENT_OPERATOR){
                             AppConstants.ORANGE_MONEY_OPERATOR->{
+                                val splitor1="fcfa"
+                                val tab=messageBody.split(splitor1)
+                                if(tab.isNotEmpty()){
+                                    val splitor2="montantdelatransaction:"
+                                    val tab2=(tab[0]).split(splitor2)
+                                    if(tab2.isNotEmpty()){
+                                        solde=try {
+                                            tab2[1].toDouble()
+                                        }catch (e:Exception){
+                                            0.0
+                                        }
+                                    }
+                                }
+                            }
+                            AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
+                            }
+                        }
+
+                    }
+                    AppConstants.FORFAIT_INTERNET->{
+
+                        when(OperatorParameter.CURRENT_OPERATOR){
+                            AppConstants.ORANGE_MONEY_OPERATOR->{
+                                val splitor1="fcfa"
+                                val tab=messageBody.split(splitor1)
+                                if(tab.isNotEmpty()){
+                                    val splitor2="montant:"
+                                    val tab2=(tab[0]).split(splitor2)
+                                    if(tab2.isNotEmpty()){
+                                        solde=try {
+                                            tab2[1].toDouble()
+                                        }catch (e:Exception){
+                                            0.0
+                                        }
+                                    }
+                                }
                             }
                             AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
 
@@ -413,7 +530,7 @@ object SmsUtil {
                 }
             }
         }
-        detailOperation.amount= solde.toInt()
+        detailOperation.amount= solde
         return detailOperation
     }
 

@@ -22,6 +22,7 @@ object AppConstants {
     const val DETAIL_OPERATION="DETAIL_OPERATION"
 
     //represente lesconstantes des operation
+    const val FORFAIT_INTERNET="Forfait internet"
     const val TRANSFERE_D_ARGENT="Transfert d'argent"
     const val ACHAT_DE_CREDIT="Achat de crédit"
     const val FACTURE_ENEO="Facture eneo"
