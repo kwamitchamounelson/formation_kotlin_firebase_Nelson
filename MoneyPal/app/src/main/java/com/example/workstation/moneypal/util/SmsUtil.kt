@@ -8,6 +8,7 @@ import com.example.workstation.moneypal.entities.DetailOperation
 import com.example.workstation.moneypal.entities.Operation
 import com.example.workstation.moneypal.entities.OperatorParameter
 import com.example.workstation.moneypal.entities.SmsObject
+import org.jetbrains.anko.toast
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
@@ -522,7 +523,6 @@ object SmsUtil {
                                 }
                             }
                         }
-
                     }
                     else->{
                         solde=0.0
@@ -532,6 +532,21 @@ object SmsUtil {
         }
         detailOperation.amount= solde
         return detailOperation
+    }
+
+
+    fun getOperatorOfNumber(context: Context,phoneNumber:String):String{
+        var operator=AppConstants.ORANGE_MONEY_OPERATOR
+        val racinePhone=phoneNumber.substring(5)
+        try {
+            //context.toast("premier caractere:${racinePhone.substring(0,1)}\ndeux premier carateres: ${racinePhone.substring(0,2)}")
+            if((racinePhone[0].toInt()==7) || (racinePhone.substring(0,2).toInt()<=54)){
+                operator=AppConstants.MTN_MOBILE_MONEY_OPERATOR
+            }
+        }catch (e:Exception){
+            operator=OperatorParameter.CURRENT_OPERATOR
+        }
+        return operator
     }
 
 }

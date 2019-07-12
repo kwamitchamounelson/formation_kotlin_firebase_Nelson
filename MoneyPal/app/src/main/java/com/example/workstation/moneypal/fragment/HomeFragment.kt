@@ -65,16 +65,16 @@ class HomeFragment : Fragment() {
                         GlideApp.with(this@HomeFragment)
                             .load(StorageUtil.pathToReference(user.photo!!))
                             .transform(CircleCrop())
-                            .placeholder(R.drawable.ic_person_outline_black_24dp)
-                            .error(R.drawable.ic_person_outline_black_24dp)
+                            .placeholder(R.drawable.ic_account_circle_black_24dp)
+                            .error(R.drawable.ic_account_circle_black_24dp)
                             .into(myView.image_view_user)
                     }
                     else{
                         GlideApp.with(this@HomeFragment)
                             .load("")
                             .transform(CircleCrop())
-                            .placeholder(R.drawable.ic_person_outline_black_24dp)
-                            .error(R.drawable.ic_person_outline_black_24dp)
+                            .placeholder(R.drawable.ic_account_circle_black_24dp)
+                            .error(R.drawable.ic_account_circle_black_24dp)
                             .into(myView.image_view_user)
                     }
                 }

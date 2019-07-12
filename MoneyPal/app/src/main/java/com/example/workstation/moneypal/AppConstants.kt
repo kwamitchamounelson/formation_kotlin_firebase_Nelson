@@ -4,6 +4,7 @@ object AppConstants {
     const val SPLITOR_OF_LINK="groupId"
     const val URL_ICON_DYNAMIC_LINK="https://firebasestorage.googleapis.com/v0/b/moneypal-88e28.appspot.com/o/moneypal.jpg?alt=media&token=68fbeb8d-37a9-47f1-8e42-e40e098e44a6"
     const val ACTION_SEND_MONEY_ORANGE_ORANGE="7bc2510f"
+    const val ACTION_SEND_MONEY_MTN_MTN="ee0886e4"
     const val USER="USER"
     const val CONTRIBUTION="CONTRIBUTION"
     const val USER_NAME="USER_NAME"

@@ -146,11 +146,11 @@ class MoneyPalActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
-            /*R.id.open_groups -> {
-                val intent = Intent(this, GroupActivity::class.java)
+            R.id.statistic -> {
+                val intent = Intent(this, StatisticActivity::class.java)
                 startActivity(intent)
                 return true
-            }*/
+            }
             R.id.orange_money -> {
                 //GroupParameter.currentFragment=1
                 changeOperator(AppConstants.ORANGE_MONEY_OPERATOR)

@@ -2,8 +2,14 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.workstation.moneypal.MoneyPalActivity">
+
     <item android:id="@+id/group_manager"
           android:title="Gestion de groupe"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/statistic"
+          android:title="Statistiques"
           android:orderInCategory="100"
           app:showAsAction="never"/>
 

@@ -2,7 +2,7 @@
     <string name="app_name">Money Pal</string>
     <string name="title_activity_money_pal">MoneyPalActivity</string>
     <string name="title_home">Accueil</string>
-    <string name="title_users">Membres</string>
+    <string name="title_users">Contributions</string>
     <string name="title_notifications">Notifications</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -10,4 +10,5 @@
     <string name="see_all">TOUT VOIR</string>
     <string name="title_activity_group">Gestion des groupes</string>
     <string name="title_activity_test_dynamic_link">TestDynamicLinkActivity</string>
+    <string name="title_activity_statistic">Statistiques</string>
 </resources>
