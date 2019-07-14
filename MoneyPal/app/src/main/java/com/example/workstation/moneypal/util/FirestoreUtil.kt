@@ -65,9 +65,17 @@ object FirestoreUtil {
         }
     }
 
+    fun getContributionOfUser(user:User,group: GroupUsers,onComplete: (ContributionUser?) -> Unit){
+        firestoreInstance.collection("users").document(user.phoneNumber).collection("groups").document(group.groupId)
+            .get()
+            .addOnSuccessListener {
+                onComplete(it.toObject(ContributionUser::class.java)!!)
+            }
+    }
+
     fun addUserListener(context: Context, onListen:(List<Item>,Int)->Unit){
         val items= mutableListOf<Item>()
-        var contributionUser:ContributionUser
+        var contributionUser:ContributionUser?=null
         var user:User
         val currentGroup=GroupParameter.currenGroupUsers
         for (phone in currentGroup!!.listOfUsers){
@@ -78,9 +86,13 @@ object FirestoreUtil {
                     .document(currentGroup.groupId)
                     .addSnapshotListener { documentSnapshot2, firebaseFirestoreException ->
                         user= documentSnapshot!!.toObject(User::class.java)!!
-                        contributionUser= documentSnapshot2!!.toObject(ContributionUser::class.java)!!
-                        //GroupParameter.currenGroupTotalAmount+=contributionUser.amount
-                        items.add(UserItem(user,contributionUser,context))
+                        if (documentSnapshot2 != null) {
+                            contributionUser= documentSnapshot2.toObject(ContributionUser::class.java)
+                            //GroupParameter.currenGroupTotalAmount+=contributionUser.amount
+                            if(contributionUser!=null){
+                                items.add(UserItem(user,contributionUser!!,context))
+                            }
+                        }
                         onListen(items,GroupParameter.currenGroupTotalAmount)
                     }
             }
@@ -88,9 +100,9 @@ object FirestoreUtil {
     }
 
 
-    fun addUserListenerForSelect(context: Context, onListen:(List<Item>)->Unit){
+    fun addUserListenerForSelect(currentGroup:GroupUsers?,context: Context, onListen:(List<Item>)->Unit){
         val progressDialog=context.indeterminateProgressDialog("Veillez patienter")
-        val currentGroup=GroupParameter.currenGroupUsers
+        //val currentGroup=GroupParameter.currenGroupUsers
         firestoreInstance.collection("users")
             .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
                 if(firebaseFirestoreException!=null){

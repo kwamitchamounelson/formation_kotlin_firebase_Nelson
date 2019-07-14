@@ -1,6 +1,7 @@
 package com.example.workstation.moneypal.fragment
 
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ClipDrawable
 import android.os.Bundle
@@ -11,14 +12,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.workstation.moneypal.GroupActivity
-import com.example.workstation.moneypal.MoneyPalActivity
-import com.example.workstation.moneypal.R
+import com.example.workstation.moneypal.*
 import com.example.workstation.moneypal.entities.AcountParameter
 import com.example.workstation.moneypal.entities.GroupParameter
 import com.example.workstation.moneypal.entities.GroupeCreateParameter
+import com.example.workstation.moneypal.entities.OperatorParameter
 import com.example.workstation.moneypal.recycleView.UserItem
 import com.example.workstation.moneypal.util.DynamicLinkUtil
+import com.example.workstation.moneypal.util.SmsUtil
 import com.example.workstation.whatsup.util.FirestoreUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
@@ -76,6 +77,47 @@ class GroupFragment : Fragment() {
                     toast("Veuillez choisir un groupe")
                     val intent=Intent(this@GroupFragment.context,GroupActivity::class.java)
                     startActivity(intent)
+                }
+            }
+
+            myView.pay_member_text_view.setOnClickListener {
+                val creatorPhone=currentGroup!!.creatorPhone
+                if(!(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!.equals(creatorPhone,true))){
+                    val operatorOfAdminNumber= SmsUtil.getOperatorOfNumber(this@GroupFragment.context!!,creatorPhone!!)
+                    if(operatorOfAdminNumber.equals(OperatorParameter.CURRENT_OPERATOR,true)){
+                        beginPay()
+                    }
+                    else{
+                        val message="L'opérateur courrant que vous avez activé est ${OperatorParameter.CURRENT_OPERATOR} " +
+                                "et le numéro du createur du groupe au quel vous souhaitez contribuer est $operatorOfAdminNumber ." +
+                                "Voullez-vous changer l'operateur courrant vers $operatorOfAdminNumber ?"
+                        lateinit var dialog: AlertDialog
+                        val builder = AlertDialog.Builder(this@GroupFragment.context!!)
+                        builder.apply {
+                            setTitle("Changement d'opérateur")
+                            setMessage(message)
+                            setIcon(com.google.firebase.firestore.R.drawable.notification_icon_background)
+                        }
+                        val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
+                            when(which){
+                                DialogInterface.BUTTON_POSITIVE ->{
+                                    OperatorParameter.CURRENT_OPERATOR=operatorOfAdminNumber
+                                    beginPay()
+                                }
+                                DialogInterface.BUTTON_NEGATIVE ->{
+                                }
+                            }
+                        }
+                        builder.setPositiveButton("Ok",dialogClickListener)
+                        builder.setNegativeButton("Annuler",dialogClickListener)
+                        dialog = builder.create()
+                        dialog.show()
+                    }
+                }
+                else{
+                    val message="Le créateur du groupe ne peut contribuer lui meme " +
+                            "car les contributions sont faites dans son compte"
+                    FirestoreUtil.showAlertDilogue("Attention",message,this@GroupFragment.context!!)
                 }
             }
 
@@ -154,7 +196,7 @@ class GroupFragment : Fragment() {
     }
 
     private fun loadUsers() {
-        FirestoreUtil.addUserListenerForSelect(this@GroupFragment.context!!, this::updateRecycleViewAlertDialogue)
+        FirestoreUtil.addUserListenerForSelect(GroupParameter.currenGroupUsers,this@GroupFragment.context!!, this::updateRecycleViewAlertDialogue)
     }
 
     private fun updateRecycleViewAlertDialogue(items: List<Item>) {
@@ -208,6 +250,17 @@ class GroupFragment : Fragment() {
         mDialogView.button_cancel_alert_dialog.setOnClickListener {
             GroupeCreateParameter.clearAllData()
             mAlertDialog.dismiss()
+        }
+    }
+
+    private fun beginPay() {
+        FirestoreUtil.getCurrentUser {user ->
+            FirestoreUtil.getContributionOfUser(user,currentGroup!!,onComplete = {contributionUser ->
+                val intent=Intent(context, UserPayActivity::class.java)
+                intent.putExtra(AppConstants.USER,user)
+                intent.putExtra(AppConstants.CONTRIBUTION,contributionUser)
+                startActivity(intent)
+            })
         }
     }
 

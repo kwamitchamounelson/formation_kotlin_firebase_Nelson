@@ -95,7 +95,11 @@ object SmsUtil {
                         )
                     }
                     AppConstants.MTN_MOBILE_MONEY_OPERATOR->{
-
+                        list= arrayListOf(
+                            "Transfert de",
+                            "effectue avec succes",
+                            "Nouveau Solde"
+                        )
                     }
                 }
             }

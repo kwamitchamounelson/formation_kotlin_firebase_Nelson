@@ -186,6 +186,7 @@ class UserAuthActivity : AppCompatActivity() {
                 code_verification2.visibility= View.VISIBLE
                 phone_number2.visibility= View.INVISIBLE
                 phone_code_number.visibility= View.INVISIBLE
+                linearLayout_phone.visibility=View.GONE
                 //international_code2.visibility=View.INVISIBLE
                 verify_phone_number2.text="Vérifier"
                 info2.text="Entrez le Code de confirmation"
