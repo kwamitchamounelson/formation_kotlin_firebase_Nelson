@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -228,6 +231,65 @@ class PlayActivity : AppCompatActivity() {
             takePictureIntent.resolveActivity(packageManager)?.also {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        val searchItem = menu!!.findItem(R.id.search_view_word)
+        val searchView = searchItem.actionView as SearchView
+        searchView.setSubmitButtonEnabled(true)
+        searchView.setQueryHint("Search a word")
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                //TODO implementer la recherche
+                seachWord(newText)
+                return true
+            }
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun seachWord(newText: String) {
+        if(newText.isEmpty()){
+            recycle_view_word.apply {
+                layoutManager= LinearLayoutManager(this@PlayActivity)
+                adapter= GroupAdapter<ViewHolder>().apply {
+                    itemSectionWord= Section(wordItems)
+                    add(itemSectionWord)
+                    setOnItemClickListener(onItemClickWord)
+                }
+            }
+        }
+        else{
+            var items= mutableListOf<Item>()
+            var word:Word
+            for(item in wordItems){
+                word=(item as WordItem).word
+                if((word.text).contains(newText,true)){
+                    items.add(item)
+                }
+            }
+            recycle_view_word.apply {
+                layoutManager= LinearLayoutManager(this@PlayActivity)
+                adapter= GroupAdapter<ViewHolder>().apply {
+                    itemSectionWord= Section(items)
+                    add(itemSectionWord)
+                    setOnItemClickListener(onItemClickWord)
+                }
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.setting -> {
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

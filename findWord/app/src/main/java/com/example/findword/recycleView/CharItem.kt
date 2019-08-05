@@ -13,7 +13,10 @@ class CharItem (val caracter: Caracter, private val context: Context): Item() {
         viewHolder.char_textView.text="${caracter.char}"
         if (caracter.isSelected){
             viewHolder.card_char.apply {
-                setCardBackgroundColor(Color.YELLOW)
+                setCardBackgroundColor(Color.BLACK)
+            }
+            viewHolder.char_textView.apply {
+                setTextColor(Color.WHITE)
             }
         }
     }
