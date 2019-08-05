@@ -4,6 +4,7 @@ package com.example.workstation.moneypal.fragment
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.ClipDrawable
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -18,6 +19,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.workstation.moneypal.AppConstants
+import com.example.workstation.moneypal.BuildConfig
 import com.example.workstation.moneypal.DetailOperationActivity
 import com.example.workstation.moneypal.R
 import com.example.workstation.moneypal.entities.*
@@ -27,6 +29,8 @@ import com.example.workstation.moneypal.recycleView.OperationItem
 import com.example.workstation.moneypal.util.SmsUtil
 import com.example.workstation.whatsup.util.FirestoreUtil
 import com.example.workstation.whatsup.util.StorageUtil
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.OnItemClickListener
 import com.xwray.groupie.Section
@@ -40,7 +44,6 @@ import org.jetbrains.anko.support.v4.toast
 
 
 class HomeFragment : Fragment() {
-
 
     private val MY_PERMISSIONS_REQUEST_READ_CONTACTS=0
     var operations= mutableListOf<Item>()
@@ -57,6 +60,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        doRemoteConfig()
         myView= inflater.inflate(R.layout.fragment_home, container, false)
         myView.apply {
             try {
@@ -110,6 +114,34 @@ class HomeFragment : Fragment() {
         myView.recyclerView_detail.addItemDecoration(itemDecor)
         return myView
     }
+
+    private fun doRemoteConfig() {
+        var remoteConfig = FirebaseRemoteConfig.getInstance()
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setDeveloperModeEnabled(BuildConfig.DEBUG)
+            .setMinimumFetchIntervalInSeconds(4200)
+            .build()
+        remoteConfig.setConfigSettings(configSettings)
+        var map=mutableMapOf<String,Any>()
+        map.put("color","#B8082C")
+        remoteConfig.setDefaults(map)
+
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener{task ->
+                if (task.isSuccessful) {
+                    val updated = task.getResult()
+                    toast("Fetch and activate succeeded")
+                } else {
+                    toast("Fetch failed")
+                }
+
+                val color = remoteConfig.getString("color")
+                myView.top_linealayout.apply {
+                    setBackgroundColor(Color.parseColor(color))
+                }
+            }
+    }
+
 
     private fun loadLasOperation() {
         if(currentListOfDetailOperation.isNotEmpty()){
