@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -48,6 +49,7 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
         setSupportActionBar(toolbar)
+        DICTIONARY.getAllWord(this)
         loadData(AppConstantes.DEFAULT_TEXT)
         fab.setOnClickListener { view ->
             dispatchTakePictureIntent()
@@ -57,7 +59,6 @@ class PlayActivity : AppCompatActivity() {
     private fun loadData(text:String) {
         wordItems.clear()
         CharItems.clear()
-
         //convertion de la chaine en miniscule pour faciliter les comparaisons
         val textBrut=text.toLowerCase(Locale.ROOT)
 
@@ -131,37 +132,18 @@ class PlayActivity : AppCompatActivity() {
 
     //FONCTION PRINCIPALE DE RECHERCHE
     private fun findAllValidWord(wordToFind: String) {
-        var caracters= arrayListOf<Caracter>()
-        var trouve=false
-        val firsChar=wordToFind.first()
-        var str=""
-        for (row in 0 until grille.size){
-            for (column in 0 until AppConstantes.MAX_COLUMN){
-                if(grille[row][column]==firsChar){
-                    //recherche horizontale de la gauche vers la droite
-                    str=""
-                    caracters.clear()
-                    for (index in column until (column+wordToFind.length)){
-                        try {
-                            str+=grille[row][index]
-                            caracters.add(Caracter(grille[row][index],row,index,false))
-                        }catch (e:Exception){
-                            break
-                        }
-                    }
-                    if(str.equals(wordToFind,true)){
-                        wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.HORIZONTAL_DIRECTION),this))
-                        trouve=true
-                        break
-                    }
-                    //recherche horizontale de la gauche vers la droite
-
-                    //TODO implementer tous les autres types de recherches
-                    //recherche horizontale de la droite ver la gauche
-                    if(!trouve){
+        if(wordToFind.isNotEmpty()){
+            var caracters= arrayListOf<Caracter>()
+            var trouve=false
+            val firsChar=wordToFind.first()
+            var str=""
+            for (row in 0 until grille.size){
+                for (column in 0 until AppConstantes.MAX_COLUMN){
+                    if(grille[row][column]==firsChar){
+                        //recherche horizontale de la gauche vers la droite
                         str=""
                         caracters.clear()
-                        for (index in (column-wordToFind.length+1) until column+1){
+                        for (index in column until (column+wordToFind.length)){
                             try {
                                 str+=grille[row][index]
                                 caracters.add(Caracter(grille[row][index],row,index,false))
@@ -169,151 +151,171 @@ class PlayActivity : AppCompatActivity() {
                                 break
                             }
                         }
-                        if(str.equals(wordToFind.reversed(),true)){
+                        if(str.equals(wordToFind,true)){
                             wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.HORIZONTAL_DIRECTION),this))
                             trouve=true
                             break
                         }
-                    }
-                    //recherche horizontale de la droite ver la gauche
+                        //recherche horizontale de la gauche vers la droite
 
-
-                    //recherche verticale du haut vers le bas
-                    if(!trouve){
-                        str=""
-                        caracters.clear()
-                        for (index in row until (row+wordToFind.length)){
-                            try {
-                                str+=grille[index][column]
-                                caracters.add(Caracter(grille[index][column],index,column,false))
-                            }catch (e:Exception){
+                        //recherche horizontale de la droite ver la gauche
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            for (index in (column-wordToFind.length+1) until column+1){
+                                try {
+                                    str+=grille[row][index]
+                                    caracters.add(Caracter(grille[row][index],row,index,false))
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind.reversed(),true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.HORIZONTAL_DIRECTION),this))
+                                trouve=true
                                 break
                             }
                         }
-                        if(str.equals(wordToFind,true)){
-                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.VERICAL_DIRECTION),this))
-                            trouve=true
-                            break
-                        }
-                    }
-                    //recherche verticale haut vers le bas
+                        //recherche horizontale de la droite ver la gauche
 
 
-                    //recherche verticale du bas vers le haut
-                    if(!trouve){
-                        str=""
-                        caracters.clear()
-                        for (index in (row-wordToFind.length+1) until row+1){
-                            try {
-                                str+=grille[index][column]
-                                caracters.add(Caracter(grille[index][column],index,column,false))
-                            }catch (e:Exception){
+                        //recherche verticale du haut vers le bas
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            for (index in row until (row+wordToFind.length)){
+                                try {
+                                    str+=grille[index][column]
+                                    caracters.add(Caracter(grille[index][column],index,column,false))
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind,true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.VERICAL_DIRECTION),this))
+                                trouve=true
                                 break
                             }
                         }
-                        if(str.equals(wordToFind.reversed(),true)){
-                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.VERICAL_DIRECTION),this))
-                            trouve=true
-                            break
-                        }
-                    }
-                    //recherche verticale du bas vers le haut
+                        //recherche verticale haut vers le bas
 
 
-                    //recherche oblique du haut vers le bas(de la gauche ver la droite)
-                    if(!trouve){
-                        str=""
-                        caracters.clear()
-                        var k=0
-                        for (index in row until (row+wordToFind.length)){
-                            try {
-                                str+=grille[index][column+k]
-                                caracters.add(Caracter(grille[index][column+k],index,column+k,false))
-                                k++
-                            }catch (e:Exception){
+                        //recherche verticale du bas vers le haut
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            for (index in (row-wordToFind.length+1) until row+1){
+                                try {
+                                    str+=grille[index][column]
+                                    caracters.add(Caracter(grille[index][column],index,column,false))
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind.reversed(),true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.VERICAL_DIRECTION),this))
+                                trouve=true
                                 break
                             }
                         }
-                        if(str.equals(wordToFind,true)){
-                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_GD),this))
-                            trouve=true
-                            break
-                        }
-                    }
-                    //recherche oblique du haut vers le bas(de la gauche ver la droite)
+                        //recherche verticale du bas vers le haut
 
 
-                    //recherche oblique du bas vers le haut(de la gauche ver la droite)
-                    if(!trouve){
-                        str=""
-                        caracters.clear()
-                        var k=wordToFind.length
-                        for (index in (row-wordToFind.length+1) until row+1){
-                            try {
-                                str+=grille[index][column-k+1]
-                                caracters.add(Caracter(grille[index][column-k+1],index,column-k+1,false))
-                                k--
-                            }catch (e:Exception){
+                        //recherche oblique du haut vers le bas(de la gauche ver la droite)
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            var k=0
+                            for (index in row until (row+wordToFind.length)){
+                                try {
+                                    str+=grille[index][column+k]
+                                    caracters.add(Caracter(grille[index][column+k],index,column+k,false))
+                                    k++
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind,true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_GD),this))
+                                trouve=true
                                 break
                             }
                         }
-                        if(str.equals(wordToFind.reversed(),true)){
-                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_GD),this))
-                            trouve=true
-                            break
-                        }
-                    }
-                    //recherche oblique du bas vers le haut(de la gauche ver la droite)
+                        //recherche oblique du haut vers le bas(de la gauche ver la droite)
 
 
-                    //recherche oblique du haut vers le bas(de la droite vers la gauche)
-                    if(!trouve){
-                        str=""
-                        caracters.clear()
-                        var k=0
-                        for (index in row until (row+wordToFind.length)){
-                            try {
-                                str+=grille[index][column-k]
-                                caracters.add(Caracter(grille[index][column-k],index,column-k,false))
-                                k++
-                            }catch (e:Exception){
+                        //recherche oblique du bas vers le haut(de la gauche ver la droite)
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            var k=wordToFind.length
+                            for (index in (row-wordToFind.length+1) until row+1){
+                                try {
+                                    str+=grille[index][column-k+1]
+                                    caracters.add(Caracter(grille[index][column-k+1],index,column-k+1,false))
+                                    k--
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind.reversed(),true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_GD),this))
+                                trouve=true
                                 break
                             }
                         }
-                        if(str.equals(wordToFind,true)){
-                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_DG),this))
-                            trouve=true
-                            break
-                        }
-                    }
-                    //recherche oblique du haut vers le bas(de la droite vers la gauche)
+                        //recherche oblique du bas vers le haut(de la gauche ver la droite)
 
 
-                    //recherche oblique du bas vers le haut(de la droite vers la gauche)
-                    if(!trouve){
-                        str=""
-                        caracters.clear()
-                        var k=wordToFind.length
-                        for (index in (row-wordToFind.length+1) until row+1){
-                            try {
-                                str+=grille[index][column+k+1]
-                                caracters.add(Caracter(grille[index][column+k+1],index,column+k+1,false))
-                                k--
-                            }catch (e:Exception){
+                        //recherche oblique du haut vers le bas(de la droite vers la gauche)
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            var k=0
+                            for (index in row until (row+wordToFind.length)){
+                                try {
+                                    str+=grille[index][column-k]
+                                    caracters.add(Caracter(grille[index][column-k],index,column-k,false))
+                                    k++
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind,true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_DG),this))
+                                trouve=true
                                 break
                             }
                         }
-                        if(str.equals(wordToFind.reversed(),true)){
-                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_DG),this))
-                            trouve=true
-                            break
+                        //recherche oblique du haut vers le bas(de la droite vers la gauche)
+
+
+                        //recherche oblique du bas vers le haut(de la droite vers la gauche)
+                        if(!trouve){
+                            str=""
+                            caracters.clear()
+                            var k=wordToFind.length
+                            for (index in (row-wordToFind.length+1) until row+1){
+                                try {
+                                    str+=grille[index][column+k+1]
+                                    caracters.add(Caracter(grille[index][column+k+1],index,column+k+1,false))
+                                    k--
+                                }catch (e:Exception){
+                                    break
+                                }
+                            }
+                            if(str.equals(wordToFind.reversed(),true)){
+                                wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_DG),this))
+                                trouve=true
+                                break
+                            }
                         }
+                        //recherche oblique du bas vers le haut(de la droite vers la gauche)
                     }
-                    //recherche oblique du bas vers le haut(de la droite vers la gauche)
                 }
-            }
-            if (trouve){
-                break
+                if (trouve){
+                    break
+                }
             }
         }
     }
