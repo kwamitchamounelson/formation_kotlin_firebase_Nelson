@@ -122,7 +122,9 @@ class PlayActivity : AppCompatActivity() {
             }
         }
         //progressDialog.dismiss()
-        toast("fin de la recherche")
+        supportActionBar?.title=("${wordItems.size} mots trouvés")
+        supportActionBar?.subtitle="${textBrut.length} carctères dans la grille"
+        toast("${wordItems.size} mots trouvés")
         //fin de la recherche des mots
     }
 
@@ -136,9 +138,9 @@ class PlayActivity : AppCompatActivity() {
         for (row in 0 until grille.size){
             for (column in 0 until AppConstantes.MAX_COLUMN){
                 if(grille[row][column]==firsChar){
+                    //recherche horizontale de la gauche vers la droite
                     str=""
                     caracters.clear()
-                    //recherche horizontale de la gauche vers la droite
                     for (index in column until (column+wordToFind.length)){
                         try {
                             str+=grille[row][index]
@@ -147,16 +149,167 @@ class PlayActivity : AppCompatActivity() {
                             break
                         }
                     }
-                    //recherche horizontale de la gauche vers la droite
-
-                    //TODO implementer tous les autres types de recherches
-
-                    //toast("recherche de $wordToFind:\n$str")
                     if(str.equals(wordToFind,true)){
-                        wordItems.add(WordItem(Word(wordToFind,caracters,"definition"),this))
+                        wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.HORIZONTAL_DIRECTION),this))
                         trouve=true
                         break
                     }
+                    //recherche horizontale de la gauche vers la droite
+
+                    //TODO implementer tous les autres types de recherches
+                    //recherche horizontale de la droite ver la gauche
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        for (index in (column-wordToFind.length+1) until column+1){
+                            try {
+                                str+=grille[row][index]
+                                caracters.add(Caracter(grille[row][index],row,index,false))
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind.reversed(),true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.HORIZONTAL_DIRECTION),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche horizontale de la droite ver la gauche
+
+
+                    //recherche verticale du haut vers le bas
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        for (index in row until (row+wordToFind.length)){
+                            try {
+                                str+=grille[index][column]
+                                caracters.add(Caracter(grille[index][column],index,column,false))
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind,true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.VERICAL_DIRECTION),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche verticale haut vers le bas
+
+
+                    //recherche verticale du bas vers le haut
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        for (index in (row-wordToFind.length+1) until row+1){
+                            try {
+                                str+=grille[index][column]
+                                caracters.add(Caracter(grille[index][column],index,column,false))
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind.reversed(),true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.VERICAL_DIRECTION),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche verticale du bas vers le haut
+
+
+                    //recherche oblique du haut vers le bas(de la gauche ver la droite)
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        var k=0
+                        for (index in row until (row+wordToFind.length)){
+                            try {
+                                str+=grille[index][column+k]
+                                caracters.add(Caracter(grille[index][column+k],index,column+k,false))
+                                k++
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind,true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_GD),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche oblique du haut vers le bas(de la gauche ver la droite)
+
+
+                    //recherche oblique du bas vers le haut(de la gauche ver la droite)
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        var k=wordToFind.length
+                        for (index in (row-wordToFind.length+1) until row+1){
+                            try {
+                                str+=grille[index][column-k+1]
+                                caracters.add(Caracter(grille[index][column-k+1],index,column-k+1,false))
+                                k--
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind.reversed(),true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_GD),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche oblique du bas vers le haut(de la gauche ver la droite)
+
+
+                    //recherche oblique du haut vers le bas(de la droite vers la gauche)
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        var k=0
+                        for (index in row until (row+wordToFind.length)){
+                            try {
+                                str+=grille[index][column-k]
+                                caracters.add(Caracter(grille[index][column-k],index,column-k,false))
+                                k++
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind,true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_DG),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche oblique du haut vers le bas(de la droite vers la gauche)
+
+
+                    //recherche oblique du bas vers le haut(de la droite vers la gauche)
+                    if(!trouve){
+                        str=""
+                        caracters.clear()
+                        var k=wordToFind.length
+                        for (index in (row-wordToFind.length+1) until row+1){
+                            try {
+                                str+=grille[index][column+k+1]
+                                caracters.add(Caracter(grille[index][column+k+1],index,column+k+1,false))
+                                k--
+                            }catch (e:Exception){
+                                break
+                            }
+                        }
+                        if(str.equals(wordToFind.reversed(),true)){
+                            wordItems.add(WordItem(Word(wordToFind,caracters,"definition",AppConstantes.OBLIQUE_DIRECTION_DG),this))
+                            trouve=true
+                            break
+                        }
+                    }
+                    //recherche oblique du bas vers le haut(de la droite vers la gauche)
                 }
             }
             if (trouve){
@@ -242,7 +395,6 @@ class PlayActivity : AppCompatActivity() {
         searchView.setQueryHint("Search a word")
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
-                //TODO implementer la recherche
                 seachWord(newText)
                 return true
             }
@@ -286,7 +438,15 @@ class PlayActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.setting -> {
+            R.id.original_grill -> {
+                //val progressDialog=indeterminateProgressDialog("Recherche des mots en dans la grille...")
+                loadData(DICTIONARY.ORIGINAL_GRILLE)
+                //progressDialog.dismiss()
+                return true
+            }
+            R.id.my_dictionary -> {
+                val intent=Intent(this,WordActivity::class.java)
+                startActivity(intent)
                 return true
             }
             else -> super.onOptionsItemSelected(item)

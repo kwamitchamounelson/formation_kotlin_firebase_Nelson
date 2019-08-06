@@ -6,27 +6,47 @@
         app:cardBackgroundColor="#FFFF"
         android:clickable="true"
         android:focusable="true"
+        android:orientation="horizontal"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         android:layout_margin="4dp"
         android:layout_height="wrap_content">
     <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_height="match_parent">
-        <TextView android:id="@+id/word_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Nom"
-                  android:layout_marginLeft="5dp"
-                  android:textSize="15sp"
-                  android:textStyle="bold"
-                  android:layout_marginBottom="20dp"
-                  android:textColor="@android:color/black"/>
-        <TextView
-                android:id="@+id/definition"
-                android:text="definition du mot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+            <TextView android:id="@+id/word_text"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Nom"
+                      android:layout_marginLeft="5dp"
+                      android:textSize="15sp"
+                      android:textStyle="bold"
+                      android:layout_marginBottom="20dp"
+                      android:textColor="@android:color/black"/>
+            <TextView
+                    android:id="@+id/definition"
+                    android:text="definition du mot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <Button
+                android:id="@+id/button_direction"
+                android:background="@drawable/ronded_button"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:textAllCaps="false"
+                android:text="--"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>

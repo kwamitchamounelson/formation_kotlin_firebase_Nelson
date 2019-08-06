@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">findWord</string>
     <string name="title_activity_play">PlayActivity</string>
+    <string name="title_activity_word">WordActivity</string>
 </resources>

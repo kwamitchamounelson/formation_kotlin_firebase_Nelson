@@ -11,6 +11,7 @@ class WordItem(val word: Word, private val context: Context): Item() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.word_text.text=word.text
         viewHolder.definition.text=word.definition
+        viewHolder.button_direction.text=word.directtion
     }
     override fun getLayout()= R.layout.row_word
 }
